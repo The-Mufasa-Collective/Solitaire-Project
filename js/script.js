@@ -6,6 +6,7 @@ let selected = null;
 
 for (const column of columns) { 
 
+    const bottomCard = column.lastElementChild;
 
     column.addEventListener("dragstart", function(e) { 
 
@@ -20,9 +21,15 @@ for (const column of columns) {
     }); */
 
 column.addEventListener("dragover", function(e) {
-    if (column.children.length >= 2) {
+  //  if (column.children.length >= 2) {
+  //    e.preventDefault(); } else 
+    if (column.children.length === 1 && selected === diamondKing) {
         e.preventDefault();
-    } else if (column.children.length === 1 && selected === diamondKing) {
+    } else if (
+        bottomCard?.object &&
+        selected?.object &&
+        column.lastElementChild.object.number === selected.object.number + 1 && 
+        column.lastElementChild.object.color !== selected.object.color) {
         e.preventDefault();
     }
 });
@@ -66,7 +73,7 @@ function revealedCardDirection() {
     }
 };
 
-//TABLEU CARD DIRECTIONS
+//TABLEU PLACEHOLDER CARDS
 //========================================================
 
 const diamondKing = document.querySelector('#diamond-king')
@@ -85,16 +92,16 @@ spadesQueen.object = {
     number: 12,
 };
 
-const heartJack = document.querySelector('#hearts-jack')
-heartJack.object = {
-    color: "black",
+const heartsJack = document.querySelector('#hearts-jack')
+heartsJack.object = {
+    color: "red",
     suit: "hearts",
     number: 11,
 };
 
 const clubsTen = document.querySelector('#clubs-ten')
 clubsTen.object = {
-    color: "red",
+    color: "black",
     suit: "clubs",
     number: 10,
 };
