@@ -15,9 +15,17 @@ for (const column of columns) {
         selected = e.target; 
     });
 
-    column.addEventListener("dragover", function(e) { 
+/*    column.addEventListener("dragover", function(e) { 
         e.preventDefault(); 
-    });
+    }); */
+
+column.addEventListener("dragover", function(e) {
+    if (column.children.length >= 2) {
+        e.preventDefault();
+    } else if (column.children.length === 1 && selected === diamondKing) {
+        e.preventDefault();
+    }
+});
 
     column.addEventListener("drop", function() { 
         if (selected) { 
@@ -42,7 +50,7 @@ function gameStartCardDirection() {
             }
         }
     }
-}
+};
 
 gameStartCardDirection();
 
@@ -56,4 +64,38 @@ function revealedCardDirection() {
             }
         }
     }
-}
+};
+
+//TABLEU CARD DIRECTIONS
+//========================================================
+
+const diamondKing = document.querySelector('#diamond-king')
+
+diamondKing.object = {
+    color: "red",
+    suit: "diamonds",
+    number: 13,
+};
+
+const spadesQueen = document.querySelector('#spades-queen')
+
+spadesQueen.object = {
+    color: "black",
+    suit: "spades",
+    number: 12,
+};
+
+const heartJack = document.querySelector('#hearts-jack')
+heartJack.object = {
+    color: "black",
+    suit: "hearts",
+    number: 11,
+};
+
+const clubsTen = document.querySelector('#clubs-ten')
+clubsTen.object = {
+    color: "red",
+    suit: "clubs",
+    number: 10,
+};
+
