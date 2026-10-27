@@ -1,0 +1,41 @@
+body {
+    display: flex;
+    flex-direction: row;
+}
+
+div.column {
+    background-color: blue;
+    width: 150px;
+    max-height: 800px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+div.column-box {
+    background-color: aliceblue;
+    width: 130px;
+    height: 190px;
+    border-radius: 25px;
+    text-align: center;
+    margin: 0;
+    margin-top: -160px;
+    
+}
+
+#column-box1 {
+    background-color: blueviolet;
+}
+
+.column-box:first-child {
+    background-color: aquamarine;
+    margin-top: 0;
+}
+
+.column-box:last-child {
+    cursor: grab;
+    width: 130px;
+}
