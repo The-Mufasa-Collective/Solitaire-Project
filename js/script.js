@@ -24,11 +24,12 @@ for (const column of columns) {
             column.appendChild(selected);
             // column.lastElementChild.appendChild(selected);
             selected = null; 
+            revealedCardDirection();
         }
     });
 };
 
-//TABLEU CARD DIRECTIONS AT GAME START
+//TABLEU CARD DIRECTIONS
 //========================================================
 
 function gameStartCardDirection() {
@@ -36,9 +37,7 @@ function gameStartCardDirection() {
         const cardsInColumn = column.querySelectorAll('.tableu-card');
 
         for (const card of cardsInColumn) {
-            if (card === column.lastElementChild) {
-                card.classList.remove('back');
-            } else {
+            if (card !== column.lastElementChild) {
                 card.classList.add('back');
             }
         }
@@ -46,3 +45,15 @@ function gameStartCardDirection() {
 }
 
 gameStartCardDirection();
+
+function revealedCardDirection() {
+    for (const column of columns) {
+        const cardsInColumn = column.querySelectorAll('.tableu-card');
+
+        for (const card of cardsInColumn) {
+            if (card === column.lastElementChild) {
+                card.classList.remove('back');
+            }
+        }
+    }
+}
