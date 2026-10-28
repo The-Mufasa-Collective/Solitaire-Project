@@ -18,9 +18,13 @@
     <!-- the foundations -->
     <div id="piles">
       <div id="stock" class="pile">
-        <div class="card back"></div> <!-- JS replaces it -->
+        <div draggable="true" class="card stock-card" id="diamond-king">Diamond King</div>
+        <div draggable="true" class="card stock-card" id="diamond-king">Diamond King</div>
+        <div draggable="true" class="card stock-card" id="diamond-king">Diamond King</div>
       </div>
-      <div id="waste" class="pile"></div>
+      <div id="waste" class="pile">
+        <div draggable="true" class="card waste-card" id="diamond-king">Diamond King</div>
+      </div>
 
       <div class="spacer"></div>
 
@@ -50,6 +54,5 @@
 
   </div>
 
-  <script src="script.js"></script>
 </body>
 </html>
