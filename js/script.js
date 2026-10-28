@@ -7,14 +7,7 @@ let selectedStack = [];
 
 for (const column of columns) { 
 
-    const bottomCard = column.lastElementChild;
-
     column.addEventListener("dragstart", function(e) { 
-
-        /* if (e.target !== column.lastElementChild) {
-            e.preventDefault(); 
-        } 
-        selected = e.target.closest('.tableu-card'); */
     if (
         e.target.closest(".tableu-card") === column.lastElementChild &&
         column.lastElementChild.children.length === 0
@@ -44,20 +37,23 @@ column.addEventListener("dragover", function(e) {
     if (column.children.length === 1 && selected === diamondKing) {
         e.preventDefault();
     } else if (
-        column.lastElementChild?.object &&
+        e.target.closest(".tableu-card")?.object &&
         selected?.object &&
-        column.lastElementChild.object.number === selected.object.number + 1 &&
-        column.lastElementChild.object.color !== selected.object.color
+        e.target.closest(".tableu-card").object.number === selected.object.number + 1 &&
+        e.target.closest(".tableu-card").object.color !== selected.object.color
     ) {
         e.preventDefault();
     }
 });
 
-column.addEventListener("drop", function() {
+column.addEventListener("drop", function(e) {
     if (selected === diamondKing && column.children.length === 1) {
         column.appendChild(selected);
-    } else if (selected && column.lastElementChild?.object) {
-        column.lastElementChild.appendChild(selected);
+    } else if (
+        selected &&
+        e.target.closest(".tableu-card")?.object
+    ) {
+        e.target.closest(".tableu-card").appendChild(selected);
     }
 
     while (selected && selectedStack.length) {
