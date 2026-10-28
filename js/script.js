@@ -27,8 +27,26 @@ function wastePileCardDirection() {
 //CLICK TO MOVE STOCK CARD TO MESS PILE
 
 stockPile.addEventListener("click", function(e) {
-    if (e.target === stockPile.lastElementChild) {
+    if (e.target === stockPile.lastElementChild
+    ) {
         wastePile.appendChild(e.target);
+        e.target.classList.remove('stock-card');
         e.target.classList.add('waste-card');
+        e.target.setAttribute('draggable', true);
         wastePileCardDirection();
-}});
+    } else if (e.target === stockPile &&
+        stockPile.children.length === 0 &&
+        wastePile.children.length > 0
+    ) {
+    while (wastePile.lastElementChild
+    ) {
+    const returningCard = wastePile.lastElementChild;
+    returningCard.classList.remove('waste-card');
+    returningCard.classList.add('stock-card');
+    returningCard.setAttribute('draggable', false);
+    stockPile.appendChild(returningCard);
+  }
+
+  stockPileCardDirection();
+}
+});

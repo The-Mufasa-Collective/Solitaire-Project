@@ -68,6 +68,14 @@ body {
 .black { color: black; }
 .red   { color: crimson; }
 
+#stock {
+  cursor: pointer;
+  background-image: url("../assets/refresh-icon.svg");
+  background-size: 100px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 /* Columns */
 #columns {
   display: flex;
@@ -115,8 +123,8 @@ body {
   cursor: pointer;
 }
 
-card.waste-card {
-  cursor: pointer;
+.card.waste-card {
+  cursor: grab;
 }
 
 
