@@ -128,7 +128,16 @@ body {
 .tableu-card {
   position: relative;  
   background-color: aliceblue;
-    margin-top: -130px;
+  margin-top: -130px;
+}
+
+.column :nth-child(2) {
+  margin-top: -150px;
+}
+
+.tableu-card * {
+  position: absolute;
+  margin-top: 20px;
 }
 
 .card[draggable="true"] { cursor: grab; }
