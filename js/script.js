@@ -50,6 +50,8 @@ column.addEventListener("dragover", function(e) {
 column.addEventListener("drop", function(e) {
     if (selected?.object === diamondKings && column.children.length === 1) {
         column.appendChild(selected);
+        selected.classList.remove('waste-card');
+        selected.classList.add('tableu-card');
     } else if (
         selected &&
         e.target.closest(".tableu-card")?.object &&
@@ -57,6 +59,8 @@ column.addEventListener("drop", function(e) {
         e.target.closest(".tableu-card").object.color !== selected.object.color
     ) {
         e.target.closest(".tableu-card").appendChild(selected);
+        selected.classList.remove('waste-card');
+        selected.classList.add('tableu-card');
     }
 
     while (selected && selectedStack.length) {
@@ -119,7 +123,7 @@ function gameStartCardDirection() {
 
 gameStartCardDirection();
 
-function revealedCardDirection() { // Needs to be called after drop event
+function revealedCardDirection() { 
     for (const column of columns) {
         const cardsInColumn = column.querySelectorAll('.tableu-card');
 
@@ -180,6 +184,7 @@ const wastePile = document.querySelector('#waste')
 
 
 //STOCK PILE CARD DIRECTION
+//========================================================
 
 function stockPileCardDirection() {
     const cardsInStock = stockPile.querySelectorAll('.stock-card');
@@ -202,6 +207,7 @@ function wastePileCardDirection() {
         wastePileCardDirection();
 
 //CLICK TO MOVE STOCK CARD TO MESS PILE & RETURN MESS PILE CARDS TO STOCK PILE
+//========================================================
 
 stockPile.addEventListener("click", function(e) {
     if (e.target === stockPile.lastElementChild
@@ -229,6 +235,8 @@ stockPile.addEventListener("click", function(e) {
 });
 
 //ALLOW DRAGGING OF WASTE PILE CARDS
+//========================================================
+
 wastePile.addEventListener("dragstart", function(e) {
     if (e.target === wastePile.lastElementChild) {
         selected = e.target;
