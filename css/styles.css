@@ -111,6 +111,14 @@ body {
 
 .card[draggable="true"] { cursor: grab; }
 
+.card.stock-card {
+  cursor: pointer;
+}
+
+card.waste-card {
+  cursor: pointer;
+}
+
 
 #buttons {
   position: absolute;

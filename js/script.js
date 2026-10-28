@@ -24,3 +24,11 @@ function wastePileCardDirection() {
 
         wastePileCardDirection();
 
+//CLICK TO MOVE STOCK CARD TO MESS PILE
+
+stockPile.addEventListener("click", function(e) {
+    if (e.target === stockPile.lastElementChild) {
+        wastePile.appendChild(e.target);
+        e.target.classList.add('waste-card');
+        wastePileCardDirection();
+}});
