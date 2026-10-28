@@ -24,7 +24,7 @@ function wastePileCardDirection() {
 
         wastePileCardDirection();
 
-//CLICK TO MOVE STOCK CARD TO MESS PILE
+//CLICK TO MOVE STOCK CARD TO MESS PILE & RETURN MESS PILE CARDS TO STOCK PILE
 
 stockPile.addEventListener("click", function(e) {
     if (e.target === stockPile.lastElementChild
@@ -49,4 +49,15 @@ stockPile.addEventListener("click", function(e) {
 
   stockPileCardDirection();
 }
+});
+
+//ALLOW DRAGGING OF WASTE PILE CARDS
+let selected = null; 
+wastePile.addEventListener("dragstart", function(e) {
+    if (e.target === wastePile.lastElementChild) {
+        selected = e.target;
+    } else {
+        selected = null;
+        e.preventDefault();
+    }
 });
