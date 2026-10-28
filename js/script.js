@@ -1,9 +1,10 @@
-//TABLEU DRAG AND DROP
+//DRAG AND DROP WITHIN TABLEU
 //========================================================
 
 const columns = document.querySelectorAll('.column'); 
 let selected = null; 
 let selectedStack = [];
+const foundationPile = document.querySelectorAll('.foundation')
 
 for (const column of columns) { 
 
@@ -67,7 +68,39 @@ column.addEventListener("drop", function(e) {
     selectedStack = [];
     revealedCardDirection();
 })};
-})};
+
+// TABLEU & FOUNDATION DRAG AND DROP EXHANGE PLACEHOLDER
+//========================================================
+
+for (const foundation of foundationPile) {
+
+foundation.addEventListener("dragstart", function(e) {
+    if (
+        e.target.closest(".tableu-card") === foundation.lastElementChild
+    ) {
+        selected = e.target.closest(".tableu-card");
+        selectedStack = [];
+    } else {
+        selected = null;
+        selectedStack = [];
+        e.preventDefault();
+    }
+});
+
+    foundation.addEventListener("dragover", function(e) {
+        if (selected) {
+            e.preventDefault();
+        }
+    });
+
+    foundation.addEventListener("drop", function(e) {
+        if (selected && selectedStack.length === 0) {
+            e.preventDefault();
+            foundation.appendChild(selected);
+            selected = null;
+            revealedCardDirection();
+        }
+    })};
 
 //TABLEU CARD DIRECTIONS
 //========================================================
