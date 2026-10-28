@@ -34,7 +34,7 @@ for (const column of columns) {
 });
 
 column.addEventListener("dragover", function(e) {
-    if (column.children.length === 1 && selected === diamondKing) {
+    if (column.children.length === 1 && selected?.object === diamondKings) {
         e.preventDefault();
     } else if (
         e.target.closest(".tableu-card")?.object &&
@@ -47,11 +47,13 @@ column.addEventListener("dragover", function(e) {
 });
 
 column.addEventListener("drop", function(e) {
-    if (selected === diamondKing && column.children.length === 1) {
+    if (selected?.object === diamondKings && column.children.length === 1) {
         column.appendChild(selected);
     } else if (
         selected &&
-        e.target.closest(".tableu-card")?.object
+        e.target.closest(".tableu-card")?.object &&
+        e.target.closest(".tableu-card").object.number === selected.object.number + 1 &&
+        e.target.closest(".tableu-card").object.color !== selected.object.color
     ) {
         e.target.closest(".tableu-card").appendChild(selected);
     }
@@ -64,6 +66,7 @@ column.addEventListener("drop", function(e) {
     selected = null;
     selectedStack = [];
     revealedCardDirection();
+})};
 })};
 
 //TABLEU CARD DIRECTIONS
@@ -98,33 +101,43 @@ function revealedCardDirection() { // Needs to be called after drop event
 //TABLEU PLACEHOLDER CARDS
 //========================================================
 
-const diamondKing = document.querySelector('#diamond-king')
-
-diamondKing.object = {
+const diamondKings = {
     color: "red",
     suit: "diamonds",
     number: 13,
 };
 
-const spadesQueen = document.querySelector('#spades-queen')
+for (const diamondKing of document.querySelectorAll('#diamond-king')){
+    diamondKing.object = diamondKings;
+}
 
-spadesQueen.object = {
+const spadeQueens = {
     color: "black",
     suit: "spades",
     number: 12,
 };
 
-const heartsJack = document.querySelector('#hearts-jack')
-heartsJack.object = {
+for (const spadesQueen of document.querySelectorAll('#spades-queen')){
+    spadesQueen.object = spadeQueens;
+}
+
+const heartsJacks = {
     color: "red",
     suit: "hearts",
     number: 11,
 };
 
-const clubsTen = document.querySelector('#clubs-ten')
-clubsTen.object = {
+for (const heartsJack of document.querySelectorAll('#hearts-jack')){
+    heartsJack.object = heartsJacks;
+}
+
+const clubsTens = {
     color: "black",
     suit: "clubs",
     number: 10,
 };
+
+for (const clubsTen of document.querySelectorAll('#clubs-ten')){
+    clubsTen.object = clubsTens;
+}
 
