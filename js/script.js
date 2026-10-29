@@ -14,7 +14,7 @@ function updateTimerDisplay() {
     let formattedSeconds = String(seconds).padStart(2, '0');
 
     // Find the HTML element by its ID and change its inner text
-    document.getElementById("timer").innerText = `Time: ${formattedMinutes}:${formattedSeconds}`;
+    document.getElementById("timer").innerText = `${formattedMinutes}:${formattedSeconds}`;
 }
 
 // 3. This function starts the timer tracking loop
@@ -42,4 +42,5 @@ function resetTimer() {
 }
 
 // Automatically start the timer when the script loads
+updateTimerDisplay();
 startTimer();
