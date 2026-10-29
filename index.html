@@ -24,18 +24,26 @@
 
       <div class="spacer"></div>
 
-      <div class="pile foundation black" data-suit="♣">♣</div>
-      <div class="pile foundation black" data-suit="♠">♠</div>
-      <div class="pile foundation red" data-suit="♦">♦</div>
-      <div class="pile foundation red" data-suit="♥">♥</div>
+      <div class="pile foundation black" data-suit="clubs">♣</div>
+      <div class="pile foundation black" data-suit="spades">♠</div>
+      <div class="pile foundation red" data-suit="diamonds">♦</div>
+      <div class="pile foundation red" data-suit="hearts">♥</div>
     </div>
 
     <!-- The columns -->
     <div id="columns">
-      <div class="column"></div>     
-      <div class="column"></div>
-      <div class="column"></div>
-      <div class="column"></div>
+      <div class="column">
+        <div draggable="true" class="card tableu-card" id="hearts-ace">Ace of heards</div>
+      </div>     
+      <div class="column">
+        <div draggable="true" class="card tableu-card" id="hearts-two">Two of hearts</div>
+      </div>
+      <div class="column">
+        <div draggable="true" class="card tableu-card" id="hearts-three">Three of hearts</div>
+      </div>
+      <div class="column">
+        <div draggable="true" class="card tableu-card" id="clubs-ace">Ace of Clubs</div>
+      </div>
       <div class="column"></div>
       <div class="column"></div>
       <div class="column"></div>
@@ -50,6 +58,5 @@
 
   </div>
 
-  <script src="script.js"></script>
 </body>
 </html>
