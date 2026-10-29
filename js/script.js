@@ -70,3 +70,54 @@ function goesOnFoundation(card, foundation){ //card on top of the box or null if
         return false;
     }
 }
+
+
+//for test only, anette has done this part so delete after testing
+const allCards = document.querySelectorAll(".tableu-card");
+for (const card of allCards) {
+    card.addEventListener("dragstart", function() {
+        selected = card;
+    });
+}
+
+// does for each of the 4 foundation boxes
+for (const foundation of foundationPile) {
+
+    //runs when a card is held over this box.
+    //e.preventDefault() says yes, you can drop here
+    foundation.addEventListener("dragover", function(e) {
+        if (selected !== null) {                       // when card is in hand
+            if (goesOnFoundation(selected, foundation)) { 
+                e.preventDefault();
+            }
+        }
+    });
+
+    //happens when you drop card over this box
+    foundation.addEventListener("drop", function(e) {
+        if (selected !== null) {
+            if (goesOnFoundation(selected, foundation)) {
+                e.preventDefault();
+                foundation.appendChild(selected);   //move the card into the box
+                selected = null;                    //hand is emtpy now
+            }
+        }
+    });
+}
+
+// does this for each 4 foundation boxes
+for (const foundation of foundationPile) {
+
+    //runs when start dragging something inside this box
+    foundation.addEventListener("dragstart", function(e) {  //e.target is the card you grabbed
+
+       
+        //lastElementChild is top card of this box
+        if (e.target === foundation.lastElementChild) {
+            selected = e.target;       //it is the top card, allowed
+        } else {
+            selected = null;           //it is a lower card, hold nothing
+            e.preventDefault();        //cancel the drag
+        }
+    });
+}
