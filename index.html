@@ -11,5 +11,48 @@
     <!-- This acts as a container placeholder that JavaScript can find and update -->
 <div id="timer">Time: 00:00</div>
 
+  <div id="game">
+
+    <div id="top-bar">
+      <div class="info">Time <span id="timer">00:00</span></div>
+      <div class="info">Score: <span id="score">0</span></div>
+    </div>
+
+    <!-- the foundations -->
+    <div id="piles">
+      <div id="stock" class="pile">
+        <div class="card back"></div> <!-- JS replaces it -->
+      </div>
+      <div id="waste" class="pile"></div>
+
+      <div class="spacer"></div>
+
+      <div class="pile foundation black" data-suit="♣">♣</div>
+      <div class="pile foundation black" data-suit="♠">♠</div>
+      <div class="pile foundation red" data-suit="♦">♦</div>
+      <div class="pile foundation red" data-suit="♥">♥</div>
+    </div>
+
+    <!-- The columns -->
+    <div id="columns">
+      <div class="column"></div>     
+      <div class="column"></div>
+      <div class="column"></div>
+      <div class="column"></div>
+      <div class="column"></div>
+      <div class="column"></div>
+      <div class="column"></div>
+    </div>
+
+    <p id="message"></p>
+
+    <div id="buttons">
+      <button id="restart">New Game</button>
+      <button id="hint">Instructions</button>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
