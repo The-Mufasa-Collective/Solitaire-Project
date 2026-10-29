@@ -44,3 +44,29 @@ function sameSuit(card, foundation) {
 const heartsBox = document.querySelector('[data-suit="hearts"]');
 console.log(sameSuit(heartsAceElement, heartsBox));
 console.log(sameSuit(clubsAceElement, heartsBox)); 
+
+
+function goesOnFoundation(card, foundation){ //card on top of the box or null if the box is empty
+    const topCard= foundation.lastElementChild;
+
+    if (sameSuit (card, foundation)) {
+
+        if (topCard === null) { //empty box, only ace is allowed
+            if (isAce(card)){
+                return true;
+            } else {
+                return false;
+            }
+
+        } else {
+            if (card.object.number === topCard.object.number + 1){ // the card must be 1 higher than top card
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+    } else { // not same suit
+        return false;
+    }
+}
