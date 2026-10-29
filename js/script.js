@@ -234,6 +234,17 @@ stockPile.addEventListener("click", function(e) {
 }
 });
 
+//CHANGE CURSOR WHEN BOTH STOCK AND WASTE PILES ARE EMPTY
+//========================================================
+
+stockPile.addEventListener("mouseover", function(e){
+    if (stockPile.children.length === 0 &&
+        wastePile.children.length === 0
+    ) stockPile.style.cursor = "not-allowed";
+    wastePile.style.cursor = "not-allowed";
+})
+
+
 //ALLOW DRAGGING OF WASTE PILE CARDS
 //========================================================
 
