@@ -20,7 +20,7 @@ function gameLoop(gameDeck) {
 
     renderStock(gameDeck)
     gameDeck[0].hidden = false;
-    serveCardToColumn(gameDeck[0], "column-1");
+    serveCardToColumn(gameDeck[0], "column1");
 }
 
 function renderStock(gameDeck) {
@@ -157,6 +157,7 @@ for (const column of columns) {
     }
 });
 
+/*
 column.addEventListener("dragover", function(e) {
     if (column.children.length === 1 && selected?.object === diamondKings) {
         e.preventDefault();
@@ -183,6 +184,47 @@ column.addEventListener("drop", function(e) {
     ) {
         e.target.closest(".tableu-card").appendChild(selected);
         selected.classList.remove('waste-card');
+        selected.classList.add('tableu-card');
+    }
+
+    while (selected && selectedStack.length) {
+        selected.appendChild(selectedStack.shift());
+        selected = selected.lastElementChild;
+    }
+
+    selected = null;
+    selectedStack = [];
+    revealedCardDirection();
+})}; */
+
+column.addEventListener("dragover", function(e) {
+    if (column.children.length === 1) {
+        e.preventDefault();
+    } else if (
+        e.target.closest(".tableu-card")?.object &&
+        selected?.object &&
+        e.target.closest(".tableu-card").object.number === selected.object.number + 1 &&
+        e.target.closest(".tableu-card").object.color !== selected.object.color
+    ) {
+        e.preventDefault();
+    }
+});
+
+column.addEventListener("drop", function(e) {
+    if (column.children.length === 1) {
+        column.appendChild(selected);
+        selected.classList.remove('waste-card');
+        selected.classList.remove('foundation-card');
+        selected.classList.add('tableu-card');
+    } else if (
+        selected &&
+        e.target.closest(".tableu-card")?.object &&
+        e.target.closest(".tableu-card").object.number === selected.object.number + 1 &&
+        e.target.closest(".tableu-card").object.color !== selected.object.color
+    ) {
+        e.target.closest(".tableu-card").appendChild(selected);
+        selected.classList.remove('waste-card');
+        selected.classList.remove('foundation-card');
         selected.classList.add('tableu-card');
     }
 
@@ -264,7 +306,7 @@ function revealedCardDirection() {
 const diamondKings = {
     color: "red",
     suit: "diamonds",
-    number: 13,
+    number: 12,
 };
 
 for (const diamondKing of document.querySelectorAll('#diamond-king')){
@@ -484,7 +526,10 @@ for (const foundation of foundationPile) {
             if (goesOnFoundation(selected, foundation)) {
                 e.preventDefault();
                 foundation.appendChild(selected);   //move the card into the box
+                selected.classList.add('foundation-card');
+                selected.classList.remove('tableu-card');
                 selected = null;                    //hand is emtpy now
+                revealedCardDirection();
             }
         }
     });

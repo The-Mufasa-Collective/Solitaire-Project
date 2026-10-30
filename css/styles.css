@@ -72,6 +72,7 @@ body {
   font-size: 48px;
   line-height: var(--card-height);
   text-align: center;
+  position: relative;
 }
 
 .black { color: black; }
@@ -165,6 +166,11 @@ body {
 
 .card.waste-card {
   cursor: grab;
+}
+
+.card.foundation-card {
+  position: absolute;
+  margin-top: 0;
 }
 
 
