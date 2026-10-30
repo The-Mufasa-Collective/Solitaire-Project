@@ -128,7 +128,6 @@ main();
 const columns = document.querySelectorAll('.column'); 
 let selected = null; 
 let selectedStack = [];
-const foundationPile = document.querySelectorAll('.foundation')
 
 for (const column of columns) { 
 
@@ -199,7 +198,7 @@ column.addEventListener("drop", function(e) {
 
 // TABLEU & FOUNDATION DRAG AND DROP EXHANGE PLACEHOLDER
 //========================================================
-
+/*
 for (const foundation of foundationPile) {
 
 foundation.addEventListener("dragstart", function(e) {
@@ -229,7 +228,7 @@ foundation.addEventListener("dragstart", function(e) {
             revealedCardDirection();
         }
     })};
-
+*/
 //TABLEU CARD DIRECTIONS
 //========================================================
 
@@ -380,8 +379,12 @@ wastePile.addEventListener("dragstart", function(e) {
         e.preventDefault();
     }
 });
+
+
+//FOUNDATION BEHAVIOR
+//========================================================
+
 const foundationPile= document.querySelectorAll(".foundation"); //holds the 4 foundation boxes
-let selected= null; //will hold the card in hand
 
 //test cards info
 const heartsAce = { color: "red", suit: "hearts", number: 1 };
@@ -455,12 +458,12 @@ function goesOnFoundation(card, foundation){ //card on top of the box or null if
 
 
 //for test only, anette has done this part so delete after testing
-const allCards = document.querySelectorAll(".tableu-card");
+/* const allCards = document.querySelectorAll(".tableu-card");
 for (const card of allCards) {
     card.addEventListener("dragstart", function() {
         selected = card;
     });
-}
+} */
 
 // does for each of the 4 foundation boxes
 for (const foundation of foundationPile) {
@@ -503,6 +506,10 @@ for (const foundation of foundationPile) {
         }
     });
 }
+
+//TIMER
+//========================================================
+
 // 1. Create variables to hold the raw time and the interval reference
 let totalSeconds = 0;
 let timerInterval = null;
