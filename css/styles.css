@@ -49,7 +49,7 @@ body {
 
 .spacer { flex: 1; }   /* pushes the foundations to the right */
 
-.pile, .column {
+.pile, .empty-column {
   width: var(--card-width);
   height: var(--card-height);
   position: relative;
@@ -68,12 +68,32 @@ body {
 .black { color: black; }
 .red   { color: crimson; }
 
+#stock {
+  cursor: pointer;
+  background-image: url("../assets/refresh-icon.svg");
+  background-size: 100px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 /* Columns */
 #columns {
   display: flex;
-  justify-content: flex-end;   /* leaves the empty space on the left */
+  justify-content: center;
+  flex-direction: row;
   gap: 38px;
   margin-top: 70px;
+}
+
+.column {
+    position: relative;
+    width: var(--card-width);
+    max-height: 800px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 
@@ -108,8 +128,35 @@ body {
   border: 4px solid white;
 }
 
+.first-column-card {
+    margin-top: 0px;
+    position: relative;
+}
+
+.tableu-card {
+  position: relative;  
+  background-color: aliceblue;
+  margin-top: -130px;
+}
+
+.column :nth-child(2) {
+  margin-top: -150px;
+}
+
+.tableu-card * {
+  position: absolute;
+  margin-top: 20px;
+}
 
 .card[draggable="true"] { cursor: grab; }
+
+.card.stock-card {
+  cursor: pointer;
+}
+
+.card.waste-card {
+  cursor: grab;
+}
 
 
 #buttons {
