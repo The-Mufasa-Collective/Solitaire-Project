@@ -132,3 +132,74 @@ button {
 }
 
 button:hover { background: #d4d4d4; }
+
+
+
+/* ==========================================
+   INSTRUCTIONS POP-UP STYLES
+   ========================================== */
+
+/* Fullscreen dark overlay behind the pop-up */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Green instruction box styling */
+.instructions {
+  border: 2px solid yellow;
+  background-color: green;
+  box-shadow: 5px 4px 8px limegreen;
+  box-sizing: border-box;
+  padding: 20px;
+  max-width: 500px;
+  width: 90%;
+  border-radius: 10px;
+}
+
+/* Main title inside the pop-up */
+#content {
+  font-size: 30px;
+  color: yellow;
+  line-height: 1.5;
+  font-family: 'Didact Gothic', Arial, sans-serif;
+  margin-top: 0;
+}
+
+/* List of rules */
+#content-list {
+  font-family: 'Didact Gothic', Arial, sans-serif;
+  font-size: 20px;
+  color: white;
+  padding-left: 25px;
+}
+
+/* Yellow close button */
+#close-instructions {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: yellow;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#close-instructions:hover {
+  background-color: limegreen;
+}
+
+/* Helper class used by JS to show/hide the pop-up */
+.hidden {
+  display: none !important;
+}
