@@ -1,20 +1,21 @@
 /*
 *   Main method
 *   responsible for setup and cleanup of the game for restarts
-*/
+
 function main() {
     let gameDeck = [];
 
     gameDeck = createStartingDeck();
 
     gameLoop(gameDeck);
-}
+}*/
 
 /*
 *   game loop method
 *   responsible for playing the game, 
 *   i.e: react to player input and serve card, track score, ect
 */
+/*
 function gameLoop(gameDeck) {
     console.log(gameDeck);
 
@@ -119,34 +120,12 @@ function renderCard(card) {
 }
 
 //run the game
-main();
+main(); */
 
 //FOUNDATION BEHAVIOR
 //========================================================
 
 const foundationPile= document.querySelectorAll(".foundation"); //holds the 4 foundation boxes
-
-//test cards info
-const heartsAce = { color: "red", suit: "hearts", value: 1 };
-
-const heartsTwo= { color:"red", suit: "hearts", value: 2 };
-
-const heartsThree= { color: "red", suit:"hearts", value: 3 };
-
-const clubsAce = { color: "black", suit: "clubs", value: 1 };
-
-//attaches each cards info to its element in the html page. also, so the code can read card.object.value later
-const heartsAceElement = document.getElementById("hearts-ace");
-heartsAceElement.object = heartsAce;
-
-const heartsTwoElement= document.getElementById("hearts-two");
-heartsTwoElement.object = heartsTwo;
-
-const heartsThreeElement = document.getElementById("hearts-three");
-heartsThreeElement.object = heartsThree;
-
-const clubsAceElement = document.getElementById("clubs-ace");
-clubsAceElement.object = clubsAce;
 
 //checks if a card is an ace. takes one card and gives back true or false
 function isAce(card) {
@@ -165,15 +144,13 @@ function sameSuit(card, foundation) {
         return false;
     }
 };
-//for test only, finds the hearts box and tries the sameSuit function
-const heartsBox = document.querySelector('[data-suit="hearts"]');
-console.log(sameSuit(heartsAceElement, heartsBox));
-console.log(sameSuit(clubsAceElement, heartsBox)); 
 
 
 function goesOnFoundation(card, foundation){ //card on top of the box or null if the box is empty
+    
+    if (card.children.length > 0) return false;
     const topCard= foundation.lastElementChild;
-
+    
     if (sameSuit (card, foundation)) {
 
         if (topCard === null) { //empty box, only ace is allowed
@@ -228,6 +205,7 @@ for (const foundation of foundationPile) {
                 selected.classList.remove('tableu-card');
                 selected = null;                    //hand is emtpy now
                 revealedCardDirection();
+                checkForMoves(tableuCards, foundationCards, stockCards, wasteCards);
             }
         }
     });
@@ -271,13 +249,6 @@ for (const column of columns) {
     ) {
         selected = e.target.closest(".tableu-card");
         selectedStack = [];
-
-        let sibling = selected.nextElementSibling;
-
-        while (sibling) {
-            selectedStack.push(sibling);
-            sibling = sibling.nextElementSibling;
-        }
     } else {
         selected = null;
         selectedStack = [];
@@ -290,6 +261,7 @@ column.addEventListener("dragover", function(e) {
         e.preventDefault();
     } else if (
         e.target.closest(".tableu-card")?.object &&
+        e.target.closest(".tableu-card")?.children.length === 0 &&
         selected?.object &&
         e.target.closest(".tableu-card").object.value === selected.object.value + 1 &&
         e.target.closest(".tableu-card").object.color !== selected.object.color
@@ -307,6 +279,7 @@ column.addEventListener("drop", function(e) {
     } else if (
         selected &&
         e.target.closest(".tableu-card")?.object &&
+        e.target.closest(".tableu-card")?.children.length === 0 &&
         e.target.closest(".tableu-card").object.value === selected.object.value + 1 &&
         e.target.closest(".tableu-card").object.color !== selected.object.color
     ) {
@@ -324,6 +297,7 @@ column.addEventListener("drop", function(e) {
     selected = null;
     selectedStack = [];
     revealedCardDirection();
+    checkForMoves(tableuCards, foundationCards, stockCards, wasteCards);
 })};
 
 //TABLEU CARD DIRECTIONS
@@ -358,6 +332,7 @@ function revealedCardDirection() {
 //TABLEU PLACEHOLDER CARDS
 //========================================================
 
+// Diamond
 const diamondKings = {
     color: "red",
     suit: "diamonds",
@@ -367,37 +342,514 @@ const diamondKings = {
 for (const diamondKing of document.querySelectorAll('#diamond-king')){
     diamondKing.object = diamondKings;
 }
+const diamondQueens = {
+    color: "red",
+    suit: "diamonds",
+    value: 12,
+};
 
+for (const diamondQueen of document.querySelectorAll('#diamond-queen')){
+    diamondQueen.object = diamondQueens;
+}
+
+const diamondJacks = {
+    color: "red",
+    suit: "diamonds",
+    value: 11,
+};
+
+for (const diamondJack of document.querySelectorAll('#diamond-jack')){
+    diamondJack.object = diamondJacks;
+}
+const diamondTens = {
+    color: "red",
+    suit: "diamonds",
+    value: 10,
+};
+
+for (const diamondTen of document.querySelectorAll('#diamond-ten')){
+    diamondTen.object = diamondTens;
+}
+
+const diamondNines = {
+    color: "red",
+    suit: "diamonds",
+    value: 9,
+};
+
+for (const diamondNine of document.querySelectorAll('#diamond-nine')){
+    diamondNine.object = diamondNines;
+}
+
+const diamondEights = {
+    color: "red",
+    suit: "diamonds",
+    value: 8,
+};
+
+for (const diamondEight of document.querySelectorAll('#diamond-eight')){
+    diamondEight.object = diamondEights;
+}
+
+const diamondSevens = {
+    color: "red",
+    suit: "diamonds",
+    value: 7,
+};
+
+for (const diamondSeven of document.querySelectorAll('#diamond-seven')){
+    diamondSeven.object = diamondSevens;
+}
+
+const diamondSixes = {
+    color: "red",
+    suit: "diamonds",
+    value: 6,
+};
+
+for (const diamondSix of document.querySelectorAll('#diamond-six')){
+    diamondSix.object = diamondSixes;
+}
+
+const diamondFives = {
+    color: "red",
+    suit: "diamonds",
+    value: 5,
+};
+
+for (const diamondFive of document.querySelectorAll('#diamond-five')){
+    diamondFive.object = diamondFives;
+}
+
+const diamondFours = {
+    color: "red",
+    suit: "diamonds",
+    value: 4,
+};
+
+for (const diamondFour of document.querySelectorAll('#diamond-four')){
+    diamondFour.object = diamondFours;
+}
+
+const diamondThrees = {
+    color: "red",
+    suit: "diamonds",
+    value: 3,
+};
+
+for (const diamondThree of document.querySelectorAll('#diamond-three')){
+    diamondThree.object = diamondThrees;
+}
+
+const diamondTwos = {
+    color: "red",
+    suit: "diamonds",
+    value: 2,
+};
+
+for (const diamondTwo of document.querySelectorAll('#diamond-two')){
+    diamondTwo.object = diamondTwos;
+}
+
+const diamondAces = {
+    color: "red",
+    suit: "diamonds",
+    value: 1,
+};
+
+for (const diamondAce of document.querySelectorAll('#diamond-ace')){
+    diamondAce.object = diamondAces;
+}
+
+// Heart
+
+const heartKings = {
+    color: "red",
+    suit: "hearts",
+    value: 13,
+};
+
+for (const heartKing of document.querySelectorAll('#heart-king')){
+    heartKing.object = heartKings;
+}
+const heartQueens = {
+    color: "red",
+    suit: "hearts",
+    value: 12,
+};
+
+for (const heartQueen of document.querySelectorAll('#heart-queen')){
+    heartQueen.object = heartQueens;
+}
+
+const heartJacks = {
+    color: "red",
+    suit: "hearts",
+    value: 11,
+};
+
+for (const heartJack of document.querySelectorAll('#heart-jack')){
+    heartJack.object = heartJacks;
+}
+const heartTens = {
+    color: "red",
+    suit: "hearts",
+    value: 10,
+};
+
+for (const heartTen of document.querySelectorAll('#heart-ten')){
+    heartTen.object = heartTens;
+}
+
+const heartNines = {
+    color: "red",
+    suit: "hearts",
+    value: 9,
+};
+
+for (const heartNine of document.querySelectorAll('#heart-nine')){
+    heartNine.object = heartNines;
+}
+
+const heartEights = {
+    color: "red",
+    suit: "hearts",
+    value: 8,
+};
+
+for (const heartEight of document.querySelectorAll('#heart-eight')){
+    heartEight.object = heartEights;
+}
+
+const heartSevens = {
+    color: "red",
+    suit: "hearts",
+    value: 7,
+};
+
+for (const heartSeven of document.querySelectorAll('#heart-seven')){
+    heartSeven.object = heartSevens;
+}
+
+const heartSixes = {
+    color: "red",
+    suit: "hearts",
+    value: 6,
+};
+
+for (const heartSix of document.querySelectorAll('#heart-six')){
+    heartSix.object = heartSixes;
+}
+
+const heartFives = {
+    color: "red",
+    suit: "hearts",
+    value: 5,
+};
+
+for (const heartFive of document.querySelectorAll('#heart-five')){
+    heartFive.object = heartFives;
+}
+
+const heartFours = {
+    color: "red",
+    suit: "hearts",
+    value: 4,
+};
+
+for (const heartFour of document.querySelectorAll('#heart-four')){
+    heartFour.object = heartFours;
+}
+
+const heartThrees = {
+    color: "red",
+    suit: "hearts",
+    value: 3,
+};
+
+for (const heartThree of document.querySelectorAll('#heart-three')){
+    heartThree.object = heartThrees;
+}
+
+const heartTwos = {
+    color: "red",
+    suit: "hearts",
+    value: 2,
+};
+
+for (const heartTwo of document.querySelectorAll('#heart-two')){
+    heartTwo.object = heartTwos;
+}
+
+const heartAces = {
+    color: "red",
+    suit: "hearts",
+    value: 1,
+};
+
+for (const heartAce of document.querySelectorAll('#heart-ace')){
+    heartAce.object = heartAces;
+}
+
+// Spades
+
+const spadeKings = {
+    color: "black",
+    suit: "spades",
+    value: 13,
+};
+
+for (const spadeKing of document.querySelectorAll('#spade-king')){
+    spadeKing.object = spadeKings;
+}
 const spadeQueens = {
     color: "black",
     suit: "spades",
     value: 12,
 };
 
-for (const spadesQueen of document.querySelectorAll('#spades-queen')){
-    spadesQueen.object = spadeQueens;
+for (const spadeQueen of document.querySelectorAll('#spade-queen')){
+    spadeQueen.object = spadeQueens;
 }
 
-const heartsJacks = {
-    color: "red",
-    suit: "hearts",
+const spadeJacks = {
+    color: "black",
+    suit: "spades",
     value: 11,
 };
 
-for (const heartsJack of document.querySelectorAll('#hearts-jack')){
-    heartsJack.object = heartsJacks;
+for (const spadeJack of document.querySelectorAll('#spade-jack')){
+    spadeJack.object = spadeJacks;
+}
+const spadeTens = {
+    color: "black",
+    suit: "spades",
+    value: 10,
+};
+
+for (const spadeTen of document.querySelectorAll('#spade-ten')){
+    spadeTen.object = spadeTens;
 }
 
-const clubsTens = {
+const spadeNines = {
+    color: "black",
+    suit: "spades",
+    value: 9,
+};
+
+for (const spadeNine of document.querySelectorAll('#spade-nine')){
+    spadeNine.object = spadeNines;
+}
+
+const spadeEights = {
+    color: "black",
+    suit: "spades",
+    value: 8,
+};
+
+for (const spadeEight of document.querySelectorAll('#spade-eight')){
+    spadeEight.object = spadeEights;
+}
+
+const spadeSevens = {
+    color: "black",
+    suit: "spades",
+    value: 7,
+};
+
+for (const spadeSeven of document.querySelectorAll('#spade-seven')){
+    spadeSeven.object = spadeSevens;
+}
+
+const spadeSixes = {
+    color: "black",
+    suit: "spades",
+    value: 6,
+};
+
+for (const spadeSix of document.querySelectorAll('#spade-six')){
+    spadeSix.object = spadeSixes;
+}
+
+const spadeFives = {
+    color: "black",
+    suit: "spades",
+    value: 5,
+};
+
+for (const spadeFive of document.querySelectorAll('#spade-five')){
+    spadeFive.object = spadeFives;
+}
+
+const spadeFours = {
+    color: "black",
+    suit: "spades",
+    value: 4,
+};
+
+for (const spadeFour of document.querySelectorAll('#spade-four')){
+    spadeFour.object = spadeFours;
+}
+
+const spadeThrees = {
+    color: "black",
+    suit: "spades",
+    value: 3,
+};
+
+for (const spadeThree of document.querySelectorAll('#spade-three')){
+    spadeThree.object = spadeThrees;
+}
+
+const spadeTwos = {
+    color: "black",
+    suit: "spades",
+    value: 2,
+};
+
+for (const spadeTwo of document.querySelectorAll('#spade-two')){
+    spadeTwo.object = spadeTwos;
+}
+
+const spadeAces = {
+    color: "black",
+    suit: "spades",
+    value: 1,
+};
+
+for (const spadeAce of document.querySelectorAll('#spade-ace')){
+    spadeAce.object = spadeAces;
+}
+
+// Clubs
+
+const clubKings = {
+    color: "black",
+    suit: "clubs",
+    value: 13,
+};
+
+for (const clubKing of document.querySelectorAll('#club-king')){
+    clubKing.object = clubKings;
+}
+const clubQueens = {
+    color: "black",
+    suit: "clubs",
+    value: 12,
+};
+
+for (const clubQueen of document.querySelectorAll('#club-queen')){
+    clubQueen.object = clubQueens;
+}
+
+const clubJacks = {
+    color: "black",
+    suit: "clubs",
+    value: 11,
+};
+
+for (const clubJack of document.querySelectorAll('#club-jack')){
+    clubJack.object = clubJacks;
+}
+const clubTens = {
     color: "black",
     suit: "clubs",
     value: 10,
 };
 
-for (const clubsTen of document.querySelectorAll('#clubs-ten')){
-    clubsTen.object = clubsTens;
+for (const clubTen of document.querySelectorAll('#club-ten')){
+    clubTen.object = clubTens;
 }
 
+const clubNines = {
+    color: "black",
+    suit: "clubs",
+    value: 9,
+};
+
+for (const clubNine of document.querySelectorAll('#club-nine')){
+    clubNine.object = clubNines;
+}
+
+const clubEights = {
+    color: "black",
+    suit: "clubs",
+    value: 8,
+};
+
+for (const clubEight of document.querySelectorAll('#club-eight')){
+    clubEight.object = clubEights;
+}
+
+const clubSevens = {
+    color: "black",
+    suit: "clubs",
+    value: 7,
+};
+
+for (const clubSeven of document.querySelectorAll('#club-seven')){
+    clubSeven.object = clubSevens;
+}
+
+const clubSixes = {
+    color: "black",
+    suit: "clubs",
+    value: 6,
+};
+
+for (const clubSix of document.querySelectorAll('#club-six')){
+    clubSix.object = clubSixes;
+}
+
+const clubFives = {
+    color: "black",
+    suit: "clubs",
+    value: 5,
+};
+
+for (const clubFive of document.querySelectorAll('#club-five')){
+    clubFive.object = clubFives;
+}
+
+const clubFours = {
+    color: "black",
+    suit: "clubs",
+    value: 4,
+};
+
+for (const clubFour of document.querySelectorAll('#club-four')){
+    clubFour.object = clubFours;
+}
+
+const clubThrees = {
+    color: "black",
+    suit: "clubs",
+    value: 3,
+};
+
+for (const clubThree of document.querySelectorAll('#club-three')){
+    clubThree.object = clubThrees;
+}
+
+const clubTwos = {
+    color: "black",
+    suit: "clubs",
+    value: 2,
+};
+
+for (const clubTwo of document.querySelectorAll('#club-two')){
+    clubTwo.object = clubTwos;
+}
+
+const clubAces = {
+    color: "black",
+    suit: "clubs",
+    value: 1,
+};
+
+for (const clubAce of document.querySelectorAll('#club-ace')){
+    clubAce.object = clubAces;
+}
 
 //STOCK PILE CARD DIRECTION
 //========================================================
@@ -449,6 +901,8 @@ stockPile.addEventListener("click", function(e) {
   }
 
   stockPileCardDirection();
+  console.log("Stock pile recycled.");
+  checkForMoves(tableuCards, foundationCards, stockCards, wasteCards);
 }
 });
 
@@ -474,6 +928,259 @@ wastePile.addEventListener("dragstart", function(e) {
         e.preventDefault();
     }
 });
+
+
+//CHECK FOR MOVES
+//========================================================
+function checkForMoves() {
+
+// 1. Checks for moves within tableu 
+
+    function tableuToTableuMove() {
+
+        let tableuToTableuMoveFound = false;
+
+        for (const movableCard of tableuCards) {
+            if (movableCard.classList.contains("back")) continue;
+
+        for (const movePair of tableuCards) {
+            if (
+                movePair !== movableCard &&
+                movePair.children.length === 0 &&
+                movePair.object.value === movableCard.object.value + 1 &&
+                movePair.object.color !== movableCard.object.color &&
+                blockTableuMoveLoop(movableCard, movePair) &&
+                !movePair.classList.contains("back") 
+            ) {
+                tableuToTableuMoveFound = true;
+                console.log("Tableu to tableu move found:", movableCard, movePair);
+            }
+        }
+        }
+    
+    // Below function blocks an available move from being read if the card to be moved is already on top of a card of the same color and value as the potential parent card match, and the existing parent can't be moved to foundation
+
+    function blockTableuMoveLoop(movableCard, movePair) {
+
+        let allowTableuMove = true;
+
+        const parentCard = movableCard.parentElement?.closest(".tableu-card")
+
+        if (!parentCard?.object) return allowTableuMove;
+        
+        if (
+            movePair.object.value !== parentCard.object.value ||
+            movePair.object.color !== parentCard.object.color
+        ) {
+            return allowTableuMove;
+        }
+
+        for (const pile of foundationPile) {
+            if (
+                parentCard.object.value === pile.lastElementChild?.object?.value + 1 &&
+                parentCard.object.suit === pile.dataset.suit
+            ) { 
+                return allowTableuMove;
+            } else if (
+                pile.children.length === 0 &&
+                parentCard.object.value === 1 &&
+                parentCard.object.suit === pile.dataset.suit
+            )
+                return allowTableuMove;
+        }
+        allowTableuMove = false;
+        return allowTableuMove;
+    }
+
+    return tableuToTableuMoveFound;
+
+    }
+
+// 2. Checks for moves from tableu to foundation
+
+    function tableuToFoundationMove() {
+
+        let tableuToFoundationMoveFound = false;
+
+        for (const movableCard of tableuCards) {
+            if (
+                movableCard.classList.contains("back") || 
+                movableCard.children.length > 0
+            ) continue;
+        
+        for (const movePair of foundationCards) {
+            for (const pile of foundationPile) {
+            if (
+                movePair.object.value === movableCard.object.value - 1 &&
+                movePair.object.suit === movableCard.object.suit
+            ) {
+                tableuToFoundationMoveFound = true
+                console.log("Tableu to foundation move found:", movableCard, movePair)
+            }
+        }
+        }
+        }
+
+        return tableuToFoundationMoveFound;
+    }
+
+// 3. Checks for moves from waste pile to tableu
+    
+    function wasteToTableuMove() {
+        
+        let wasteToTableuMoveFound = false;
+
+    for (const movableCard of wasteCards) {
+        // Doesn't consider aces moving to empty pile, fix
+        for (const movePair of tableuCards) {
+            if (
+                movePair.children.length === 0 &&
+                movePair.object.value === movableCard.object.value + 1 &&
+                movePair.object.color !== movableCard.object.color &&
+                !movePair.classList.contains("back")
+            ){
+                wasteToTableuMoveFound = true
+                console.log("Waste pile to tableu move found:", movableCard, movePair)
+            }
+        }
+        }
+
+    return wasteToTableuMoveFound;
+
+    }
+
+// 4. Checks for moves from waste pile to foundation
+
+    function wasteToFoundationMove() {
+
+        let wasteToFoundationMoveFound = false;
+
+        for (const movableCard of wasteCards) {
+        // Doesn't consider aces moving to empty pile, fix
+        for (const movePair of foundationCards) {
+            for (const pile of foundationPile) {
+            if (
+                movePair.object.value === movableCard.object.value - 1 &&
+                movePair.object.suit === movableCard.object.suit
+            ) {
+                wasteToFoundationMoveFound = true
+                console.log("Waste pile to foundation move found:", movableCard, movePair)
+            }
+        }
+        }
+        }
+
+        return wasteToFoundationMoveFound;
+    }
+
+// 5. Checks for moves from stock pile to tableu
+    function stockToTableuMove() {
+        
+        let stockToTableuMoveFound = false;
+
+    for (const movableCard of stockCards) {
+        
+        for (const movePair of tableuCards) {
+            if (
+                movePair.children.length === 0 &&
+                movePair.object.value === movableCard.object.value + 1 &&
+                movePair.object.color !== movableCard.object.color &&
+                !movePair.classList.contains("back")
+            ){
+                stockToTableuMoveFound = true
+                console.log("Stock pile to tableu move found:", movableCard, movePair)
+            }
+        }
+        }
+        return stockToTableuMoveFound;
+    }
+
+// 6. Checks for moves from stock pile to foundation
+
+    function stockToFoundationMove() {
+
+        let stockToFoundationMoveFound = false;
+
+        for (const movableCard of stockCards) {
+        // Doesn't consider aces moving to empty pile, fix
+        for (const pile of foundationPile) {
+        for (const movePair of foundationCards) {
+            if (
+                movePair.object.value === movableCard.object.value - 1 &&
+                movePair.object.suit === movableCard.object.suit &&
+                movePair === pile.lastElementChild
+            ) {
+                stockToFoundationMoveFound = true
+                console.log("Waste pile to foundation move found:", movableCard, movePair)
+            }
+        }
+        }
+        }
+
+        return stockToFoundationMoveFound;
+    }
+
+// 7. Checks for kings that can be moved to an empty column and prevents a loop of moving a king already in an empty column to other empty columns
+
+    function kingToEmptyColumnMove() {
+        
+        let kingToEmptyColumnMoveFound = false;
+
+        for (const column of columns) {
+            if (column.children.length !== 1) continue;
+
+            for (const movableCard of tableuCards) {
+                if (
+                    movableCard.object.value === 13 &&
+                    !movableCard.classList.contains("back") &&
+                    !movableCard.previousElementSibling?.classList.contains("empty-column") // Blocks a move if a king is already in an empty column
+                ) {
+                    kingToEmptyColumnMoveFound = true
+                    console.log("Tableu king to empty column move found:", movableCard, column)
+                }
+            }
+            
+            for (const movableCard of wasteCards) {
+                if (movableCard.object.value === 13)
+                    {
+                    kingToEmptyColumnMoveFound = true
+                    console.log("Waste pile king to empty column move found:", movableCard, column)
+                }
+            }
+
+            for (const movableCard of stockCards) {
+                if (movableCard.object.value === 13)
+                    {
+                    kingToEmptyColumnMoveFound = true
+                    console.log("Stock pile king to empty column move found:", movableCard, column)
+                }
+            }
+        } 
+
+        return kingToEmptyColumnMoveFound;
+    }
+    
+
+// Checks if there is available moves in any section and reports true if there is even one move available. Reports false only if there is no moves anywhere.
+
+    let movesAvailable = false;
+
+    if (tableuToTableuMove()) movesAvailable = true;
+    if (tableuToFoundationMove()) movesAvailable = true;
+    if (wasteToTableuMove()) movesAvailable = true;
+    if (wasteToFoundationMove()) movesAvailable = true;
+    if (stockToTableuMove()) movesAvailable = true;
+    if (stockToFoundationMove()) movesAvailable = true;
+    if (kingToEmptyColumnMove()) movesAvailable = true;
+
+    console.log("Moves available:", movesAvailable);
+
+    if (movesAvailable === false) {
+        alert("No more moves available.");
+    }
+
+    return movesAvailable;
+}
 
 //TIMER
 //========================================================
