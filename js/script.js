@@ -1,42 +1,15 @@
-/*
-*   Main method
-*   responsible for setup and cleanup of the game for restarts
-*/
-function main() {
-    let gameDeck = [];
 
-    gameDeck = createStartingDeck();
 
-    gameLoop(gameDeck);
+function loadTimeFromStorage() {
+    let totalSeconds = localStorage.getItem("solitaireScore");
+    if(totalSeconds == null) return;
+    document.getElementById("score").innerText = formatTime(totalSeconds);
 }
 
-/*
-*   game loop method
-*   responsible for playing the game, 
-*   i.e: react to player input and serve card, track score, ect
-*/
-function gameLoop(gameDeck) {
-    console.log(gameDeck);
-
-    renderStock(gameDeck)
-    gameDeck[0].hidden = false;
-    serveCardToColumn(gameDeck[0], "column1");
-}
-
-function renderStock(gameDeck) {
-    let stock = document.getElementById("stock");
-
-    gameDeck.forEach(card => {
-        stock.appendChild(renderCard(card))
-    });
-}
-
-function serveCardToColumn(servedCard, targetPile) {
-    let pile = document.getElementById(targetPile);
-    pile.appendChild(renderCard(servedCard))
-}
+loadTimeFromStorage()
 
 // create a fresh deck of cards and shuffles it
+// color is implied by the suit
 function createStartingDeck() {
     let deck = [];
 
@@ -44,21 +17,25 @@ function createStartingDeck() {
         deck.push({
             value: i,
             hidden: true,
+            color: "black",
             suit: "spades"
         });
         deck.push({
             value: i,
             hidden: true,
+            color: "red",
             suit: "hearts"
         });
         deck.push({
             value: i,
             hidden: true,
+            color: "red",
             suit: "diamonds"
         });
         deck.push({
             value: i,
             hidden: true,
+            color: "black",
             suit: "clubs"
         });
     }
@@ -81,72 +58,77 @@ function createStartingDeck() {
     return deck;
 }
 
+function getSuitSymbol(suit){
+        if(suit == "hearts") return "♥";
+        else if(suit == "spades") return "♠";
+        else if(suit == "diamonds") return "♦";
+        else if(suit == "clubs") return "♣";
+}
+
+function getCardValue(value) {
+    if(value === 1) return "A";
+    else if(value === 11) return "J";
+    else if(value === 12) return "Q";
+    else if(value === 13) return "K";
+    else return value;
+}
+
 function renderCard(card) {
     let cardElement = document.createElement("div")
     cardElement.setAttribute("id", `card-${card.suit}-${card.value}`)
 
-    if (card.hidden) {
-        cardElement.setAttribute("class", "card back")
-    } else {
+    cardElement.setAttribute("class", `card ${card.color}`)
+    cardElement.setAttribute("draggable", true)
+    cardElement.innerHTML = `
+            <div> ${getCardValue(card.value)} </div>
+            <div> ${getSuitSymbol(card.suit)} </div>
+        `;
 
-        // compute display value
-        let cardDisplayValue;
-
-        if(card.value === 1) cardDisplayValue = "A";
-        else if(card.value === 11) cardDisplayValue = "J";
-        else if(card.value === 12) cardDisplayValue = "Q";
-        else if(card.value === 13) cardDisplayValue = "K";
-        else cardDisplayValue = card.value;
-
-        //compute suite
-        let suitDisplay;
-
-        if(card.suit == "hearts") suitDisplay = "♥";
-        else if(card.suit == "spades") suitDisplay = "♠";
-        else if(card.suit == "diamonds") suitDisplay = "♦";
-        else if(card.suit == "clubs") suitDisplay = "♣";
-
-
-        cardElement.setAttribute("class", "card")
-        cardElement.innerHTML = `
-                <div> ${cardDisplayValue} </div>
-                <div> ${suitDisplay} </div>
-                <div> ${cardDisplayValue} </div>
-            `;
-
-    }
     return cardElement;
 }
 
-//run the game
-main();
+
+function renderStock(gameDeck) {
+    let stock = document.getElementById("stock");
+
+    gameDeck.forEach(card => {
+        let cardElement = document.createElement("div")
+        cardElement.setAttribute("id", `card-${card.suit}-${card.value}`)
+        cardElement.setAttribute("class", `card ${card.color} stock-card`)
+        cardElement.setAttribute("draggable", false)
+
+        cardElement.object = card
+
+        stock.appendChild(cardElement)
+    });
+}
+
+function prepareGameCards( )  {
+    let gameDeck = createStartingDeck();
+
+    // Distribute cards to columns:
+    for (i = 1; i <= 7; i++) {
+        let column = document.getElementById(`column${i}`);
+
+        for (j = 1; j <= i; j++) {
+            //Pick first card from deck
+            const card = gameDeck.splice(0, 1)[0];
+            let renderedCard = renderCard(card);
+            renderedCard.classList.add("tableu-card");
+            renderedCard.object = card;
+            column.appendChild(renderedCard)
+        }
+    }
+    // render the remaining card in the stock.
+    renderStock(gameDeck);
+}
+
+prepareGameCards();
 
 //FOUNDATION BEHAVIOR
 //========================================================
 
 const foundationPile= document.querySelectorAll(".foundation"); //holds the 4 foundation boxes
-
-//test cards info
-const heartsAce = { color: "red", suit: "hearts", value: 1 };
-
-const heartsTwo= { color:"red", suit: "hearts", value: 2 };
-
-const heartsThree= { color: "red", suit:"hearts", value: 3 };
-
-const clubsAce = { color: "black", suit: "clubs", value: 1 };
-
-//attaches each cards info to its element in the html page. also, so the code can read card.object.value later
-const heartsAceElement = document.getElementById("hearts-ace");
-heartsAceElement.object = heartsAce;
-
-const heartsTwoElement= document.getElementById("hearts-two");
-heartsTwoElement.object = heartsTwo;
-
-const heartsThreeElement = document.getElementById("hearts-three");
-heartsThreeElement.object = heartsThree;
-
-const clubsAceElement = document.getElementById("clubs-ace");
-clubsAceElement.object = clubsAce;
 
 //checks if a card is an ace. takes one card and gives back true or false
 function isAce(card) {
@@ -165,14 +147,15 @@ function sameSuit(card, foundation) {
         return false;
     }
 };
+
 //for test only, finds the hearts box and tries the sameSuit function
-const heartsBox = document.querySelector('[data-suit="hearts"]');
-console.log(sameSuit(heartsAceElement, heartsBox));
-console.log(sameSuit(clubsAceElement, heartsBox)); 
+// const heartsBox = document.querySelector('[data-suit="hearts"]');
+// // console.log(sameSuit(heartsAceElement, heartsBox));
+// // console.log(sameSuit(clubsAceElement, heartsBox)); 
 
 
 function goesOnFoundation(card, foundation){ //card on top of the box or null if the box is empty
-    const topCard= foundation.lastElementChild;
+    const topCard = foundation.lastElementChild;
 
     if (sameSuit (card, foundation)) {
 
@@ -198,12 +181,12 @@ function goesOnFoundation(card, foundation){ //card on top of the box or null if
 
 
 //for test only, anette has done this part so delete after testing
-/* const allCards = document.querySelectorAll(".tableu-card");
-for (const card of allCards) {
-    card.addEventListener("dragstart", function() {
-        selected = card;
-    });
-} */
+//  const allCards = document.querySelectorAll(".tableu-card");
+// for (const card of allCards) {
+//     card.addEventListener("dragstart", function() {
+//         selected = card;
+//     });
+// }
 
 // does for each of the 4 foundation boxes
 for (const foundation of foundationPile) {
@@ -336,6 +319,7 @@ function gameStartCardDirection() {
         for (const card of cardsInColumn) {
             if (card !== column.lastElementChild) {
                 card.classList.add('back');
+                card.innerHTML = "";
             }
         }
     }
@@ -349,55 +333,17 @@ function revealedCardDirection() {
 
         for (const card of cardsInColumn) {
             if (card === column.lastElementChild) {
-                card.classList.remove('back');
+                if (card.classList.contains("back")) {
+                    card.classList.remove('back');
+                    card.innerHTML = `
+                        <div> ${getCardValue(card.object.value)} </div>
+                        <div> ${getSuitSymbol(card.object.suit)} </div>
+                    `;
+                }
             }
         }
     }
 };
-
-//TABLEU PLACEHOLDER CARDS
-//========================================================
-
-const diamondKings = {
-    color: "red",
-    suit: "diamonds",
-    value: 13,
-};
-
-for (const diamondKing of document.querySelectorAll('#diamond-king')){
-    diamondKing.object = diamondKings;
-}
-
-const spadeQueens = {
-    color: "black",
-    suit: "spades",
-    value: 12,
-};
-
-for (const spadesQueen of document.querySelectorAll('#spades-queen')){
-    spadesQueen.object = spadeQueens;
-}
-
-const heartsJacks = {
-    color: "red",
-    suit: "hearts",
-    value: 11,
-};
-
-for (const heartsJack of document.querySelectorAll('#hearts-jack')){
-    heartsJack.object = heartsJacks;
-}
-
-const clubsTens = {
-    color: "black",
-    suit: "clubs",
-    value: 10,
-};
-
-for (const clubsTen of document.querySelectorAll('#clubs-ten')){
-    clubsTen.object = clubsTens;
-}
-
 
 //STOCK PILE CARD DIRECTION
 //========================================================
@@ -409,8 +355,9 @@ function stockPileCardDirection() {
 
     for (const card of cardsInStock) {
             card.classList.add('back');
-        }
-        }
+            card.innerHTML = "";
+    }
+}
 
         stockPileCardDirection();
 
@@ -419,8 +366,12 @@ function wastePileCardDirection() {
 
     for (const card of cardsInWaste) {
             card.classList.remove('back');
-        }
-        }
+            card.innerHTML = `
+                    <div> ${getCardValue(card.object.value)} </div>
+                    <div> ${getSuitSymbol(card.object.suit)} </div>
+            `;
+    }
+}
 
         wastePileCardDirection();
 
@@ -439,17 +390,15 @@ stockPile.addEventListener("click", function(e) {
         stockPile.children.length === 0 &&
         wastePile.children.length > 0
     ) {
-    while (wastePile.lastElementChild
-    ) {
-    const returningCard = wastePile.lastElementChild;
-    returningCard.classList.remove('waste-card');
-    returningCard.classList.add('stock-card');
-    returningCard.setAttribute('draggable', false);
-    stockPile.appendChild(returningCard);
-  }
-
-  stockPileCardDirection();
-}
+        while (wastePile.lastElementChild) {
+            const returningCard = wastePile.lastElementChild;
+            returningCard.classList.remove('waste-card');
+            returningCard.classList.add('stock-card');
+            returningCard.setAttribute('draggable', false);
+            stockPile.appendChild(returningCard);
+        }
+         stockPileCardDirection();
+    }
 });
 
 //CHANGE CURSOR WHEN BOTH STOCK AND WASTE PILES ARE EMPTY
@@ -532,6 +481,10 @@ if (savedScore !== null) {
 document.getElementById("restart").addEventListener("click", function() {
     localStorage.setItem("solitaireScore", totalSeconds);
     document.getElementById("score").innerText = formatTime(totalSeconds);
+
+    //proposal: easiet way to start a new game is by reloading the page. The game is time is picked up from storage
+    window.location.reload();
+
     resetTimer();
     startTimer();
 });
