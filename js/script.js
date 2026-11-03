@@ -1182,7 +1182,7 @@ const stockCards = document.querySelectorAll('.stock-card');
                     movableCard !== pile.lastElementChild // Blocks a move if an ace is already in an empty foundation
                 ) {
                     aceToEmptyFoundationMoveFound = true
-                    console.log("Tableu ace to empty column move found:", movableCard, pile)
+                    console.log("Tableu ace to empty foundation pile move found:", movableCard, pile)
                 }
             }
             
@@ -1193,7 +1193,7 @@ const stockCards = document.querySelectorAll('.stock-card');
                 )
                     {
                     aceToEmptyFoundationMoveFound = true
-                    console.log("Waste pile ace to empty column move found:", movableCard, pile)
+                    console.log("Waste pile ace to empty foundation pile found:", movableCard, pile)
                 }
             }
 
@@ -1203,7 +1203,7 @@ const stockCards = document.querySelectorAll('.stock-card');
                 )
                     {
                     aceToEmptyFoundationMoveFound = true
-                    console.log("Stock pile ace to empty column move found:", movableCard, pile)
+                    console.log("Stock pile ace to empty foundation pile found:", movableCard, pile)
                 }
             }
         } 
