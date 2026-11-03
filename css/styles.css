@@ -93,7 +93,7 @@ body {
   align-items: flex-start;
   flex-direction: row;
   gap: 38px;
-  margin-top: 10rem;
+  margin-top: 3rem;
 }
 
 .column {
@@ -149,8 +149,8 @@ body {
   margin-top: -8rem;
 }
 
-.card :nth-child(2) {
-  margin-top: 0rem;
+.column :nth-child(2) {
+  margin-top: -150px;
 }
 
 .tableu-card * {

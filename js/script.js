@@ -1,5 +1,3 @@
-
-
 function loadTimeFromStorage() {
     let totalSeconds = localStorage.getItem("solitaireScore");
     if(totalSeconds == null) return;
