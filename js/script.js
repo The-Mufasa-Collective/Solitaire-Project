@@ -1233,6 +1233,8 @@ const stockCards = document.querySelectorAll('.stock-card');
     return movesAvailable;
 }
 
+checkForMoves();
+
 //TIMER
 //========================================================
 
