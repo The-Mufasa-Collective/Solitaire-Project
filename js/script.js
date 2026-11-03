@@ -203,6 +203,8 @@ for (const foundation of foundationPile) {
                 foundation.appendChild(selected);   //move the card into the box
                 selected.classList.add('foundation-card');
                 selected.classList.remove('tableu-card');
+                selected.classList.remove('waste-card');
+                selected.classList.remove('stock-card');
                 selected = null;                    //hand is emtpy now
                 revealedCardDirection();
                 checkForMoves();
@@ -988,12 +990,7 @@ const stockCards = document.querySelectorAll('.stock-card');
                 parentCard.object.suit === pile.dataset.suit
             ) { 
                 return allowTableuMove;
-            } else if (
-                pile.children.length === 0 &&
-                parentCard.object.value === 1 &&
-                parentCard.object.suit === pile.dataset.suit
-            )
-                return allowTableuMove;
+            } 
         }
         allowTableuMove = false;
         return allowTableuMove;
@@ -1038,7 +1035,7 @@ const stockCards = document.querySelectorAll('.stock-card');
         let wasteToTableuMoveFound = false;
 
     for (const movableCard of wasteCards) {
-        // Doesn't consider aces moving to empty pile, fix
+
         for (const movePair of tableuCards) {
             if (
                 movePair.children.length === 0 &&
@@ -1063,7 +1060,7 @@ const stockCards = document.querySelectorAll('.stock-card');
         let wasteToFoundationMoveFound = false;
 
         for (const movableCard of wasteCards) {
-        // Doesn't consider aces moving to empty pile, fix
+
         for (const movePair of foundationCards) {
             for (const pile of foundationPile) {
             if (
@@ -1109,7 +1106,7 @@ const stockCards = document.querySelectorAll('.stock-card');
         let stockToFoundationMoveFound = false;
 
         for (const movableCard of stockCards) {
-        // Doesn't consider aces moving to empty pile, fix
+
         for (const pile of foundationPile) {
         for (const movePair of foundationCards) {
             if (
@@ -1166,7 +1163,52 @@ const stockCards = document.querySelectorAll('.stock-card');
 
         return kingToEmptyColumnMoveFound;
     }
-    
+
+// 8. Checks moves for aces to be moved to an empty foundation pile of the same suit
+
+    function aceToEmptyFoundationMove() {
+        
+        let aceToEmptyFoundationMoveFound = false;
+
+        for (const pile of foundationPile) {
+            if (pile.children.length !== 0) continue;
+
+            for (const movableCard of tableuCards) {
+                if (
+                    movableCard.object.value === 1 &&
+                    !movableCard.classList.contains("back") &&
+                    movableCard.object.suit === pile.dataset.suit &&
+                    movableCard !== pile.lastElementChild // Blocks a move if an ace is already in an empty foundation
+                ) {
+                    aceToEmptyFoundationMoveFound = true
+                    console.log("Tableu ace to empty column move found:", movableCard, pile)
+                }
+            }
+            
+            for (const movableCard of wasteCards) {
+                if (
+                    movableCard.object.value === 1 &&
+                    movableCard.object.suit === pile.dataset.suit
+                )
+                    {
+                    aceToEmptyFoundationMoveFound = true
+                    console.log("Waste pile ace to empty column move found:", movableCard, pile)
+                }
+            }
+
+            for (const movableCard of stockCards) {
+                if (movableCard.object.value === 1 &&
+                    movableCard.object.suit === pile.dataset.suit
+                )
+                    {
+                    aceToEmptyFoundationMoveFound = true
+                    console.log("Stock pile ace to empty column move found:", movableCard, pile)
+                }
+            }
+        } 
+
+        return aceToEmptyFoundationMoveFound;
+    }
 
 // Checks if there is available moves in any section and reports true if there is even one move available. Reports false only if there is no moves anywhere.
 
@@ -1179,6 +1221,7 @@ const stockCards = document.querySelectorAll('.stock-card');
     if (stockToTableuMove()) movesAvailable = true;
     if (stockToFoundationMove()) movesAvailable = true;
     if (kingToEmptyColumnMove()) movesAvailable = true;
+    if (aceToEmptyFoundationMove()) movesAvailable = true;
 
     console.log("Moves available:", movesAvailable);
 
