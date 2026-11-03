@@ -90,9 +90,10 @@ body {
 #columns {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   flex-direction: row;
   gap: 38px;
-  margin-top: 70px;
+  margin-top: 10rem;
 }
 
 .column {
@@ -145,7 +146,7 @@ body {
 .tableu-card {
   position: sticky;  
   background-color: aliceblue;
-  margin-top: -3rem;
+  margin-top: -8rem;
 }
 
 .card :nth-child(2) {

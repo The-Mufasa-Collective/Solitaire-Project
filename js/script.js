@@ -57,6 +57,13 @@ function createStartingDeck() {
 
     return deck;
 }
+function getCardValue(value) {
+    if(value === 1) return "A";
+    else if(value === 11) return "J";
+    else if(value === 12) return "Q";
+    else if(value === 13) return "K";
+    else return value;
+}
 
 function getSuitSymbol(suit){
         if(suit == "hearts") return "♥";
@@ -65,13 +72,6 @@ function getSuitSymbol(suit){
         else if(suit == "clubs") return "♣";
 }
 
-function getCardValue(value) {
-    if(value === 1) return "A";
-    else if(value === 11) return "J";
-    else if(value === 12) return "Q";
-    else if(value === 13) return "K";
-    else return value;
-}
 
 function renderCard(card) {
     let cardElement = document.createElement("div")
