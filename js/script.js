@@ -889,11 +889,12 @@ stockPile.addEventListener("click", function(e) {
         e.target.classList.add('waste-card');
         e.target.setAttribute('draggable', true);
         wastePileCardDirection();
+        checkForMoves();
     } else if (e.target === stockPile &&
         stockPile.children.length === 0 &&
         wastePile.children.length > 0
     ) {
-    while (wastePile.lastElementChild
+    while (wastePile.lastElementChild // Returns cards one by one to ensure the order remains the same as at game start
     ) {
     const returningCard = wastePile.lastElementChild;
     returningCard.classList.remove('waste-card');
