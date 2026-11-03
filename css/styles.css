@@ -98,9 +98,10 @@ body {
 .column {
     position: relative;
     width: var(--card-width);
+    max-height: 800px;
     display: flex;
     flex-direction: column;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
 }
@@ -143,18 +144,18 @@ body {
 }
 
 .tableu-card {
-  position: sticky;  
+  position: relative;  
   background-color: aliceblue;
-  margin-top: -3rem;
+  margin-top: -130px;
 }
 
-.card :nth-child(2) {
-  margin-top: 0rem;
+.column :nth-child(2) {
+  margin-top: -150px;
 }
 
 .tableu-card * {
   position: absolute;
-  margin-top: 1.5rem;
+  margin-top: 20px;
 }
 
 .card[draggable="true"] { cursor: grab; }
