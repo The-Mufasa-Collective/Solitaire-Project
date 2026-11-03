@@ -205,7 +205,7 @@ for (const foundation of foundationPile) {
                 selected.classList.remove('tableu-card');
                 selected = null;                    //hand is emtpy now
                 revealedCardDirection();
-                checkForMoves(tableuCards, foundationCards, stockCards, wasteCards);
+                checkForMoves();
             }
         }
     });
@@ -297,7 +297,7 @@ column.addEventListener("drop", function(e) {
     selected = null;
     selectedStack = [];
     revealedCardDirection();
-    checkForMoves(tableuCards, foundationCards, stockCards, wasteCards);
+    checkForMoves();
 })};
 
 //TABLEU CARD DIRECTIONS
@@ -902,7 +902,7 @@ stockPile.addEventListener("click", function(e) {
 
   stockPileCardDirection();
   console.log("Stock pile recycled.");
-  checkForMoves(tableuCards, foundationCards, stockCards, wasteCards);
+  checkForMoves();
 }
 });
 
@@ -932,7 +932,14 @@ wastePile.addEventListener("dragstart", function(e) {
 
 //CHECK FOR MOVES
 //========================================================
+
 function checkForMoves() {
+
+const tableuCards = document.querySelectorAll('.tableu-card');
+const foundationCards = document.querySelectorAll('.foundation-card');
+const wasteCards = document.querySelectorAll('.waste-card');
+const stockCards = document.querySelectorAll('.stock-card');
+
 
 // 1. Checks for moves within tableu 
 
