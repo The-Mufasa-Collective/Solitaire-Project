@@ -209,6 +209,7 @@ for (const foundation of foundationPile) {
                 selected = null;                    //hand is emtpy now
                 revealedCardDirection();
                 checkForMoves();
+                autoComplete();
             }
         }
     });
@@ -301,6 +302,7 @@ column.addEventListener("drop", function(e) {
     selectedStack = [];
     revealedCardDirection();
     checkForMoves();
+    autoComplete();
 })};
 
 //TABLEU CARD DIRECTIONS
@@ -770,8 +772,40 @@ const stockCards = document.querySelectorAll('.stock-card');
 
 checkForMoves();
 
+// AUTO-COMPLETE
+//========================================================
+
+function autoComplete(){
+    
+    const tableuCards = document.querySelectorAll(".tableu-card");
+    const buttons = document.querySelector("#buttons");
+
+    for (const card of tableuCards) {
+        if (card.classList.contains('back')) {
+            return;
+        }
+    }
+    let autoCompleteButton = document.createElement("button");
+    autoCompleteButton.setAttribute("id","auto-complete");
+    buttons.appendChild(autoCompleteButton);
+    autoCompleteButton.textContent = "Auto-complete";
+    autoCompleteButton.addEventListener("click", function() {
+    localStorage.setItem("solitaireScore", totalSeconds);
+    document.getElementById("score").innerText = formatTime(totalSeconds);
+
+    // A lower time means a faster game.
+    if (bestTime === null || totalSeconds < Number(bestTime)) {
+        localStorage.setItem("solitaireBestTime", totalSeconds);
+    }
+
+    window.location.reload();
+    });
+
+}
 
 // INSTRUCTIONS
+//========================================================
+
 
 // Get elements by ID
 const modal = document.getElementById('instructions-modal');
