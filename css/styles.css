@@ -1,13 +1,14 @@
 /* Change these numbers to resize every card */
 :root {
-    --card-width: 105px;
-    --card-height: 150px;
+    --card-width: 5.5rem;
+    --card-height: 8rem;
 }
 
 body {
     margin: 0;
     background: #f1f3f9;
     font-family: sans-serif;
+    background: #165a3a;
 }
 
 #game {
@@ -15,9 +16,8 @@ body {
     width: 100%;
     min-height: 100vh;
     margin: 0;
-    padding: 30px 40px;
+    padding: 20px 40px;
     box-sizing: border-box;
-    background: #165a3a;
     color: white;
 }
 
@@ -26,7 +26,7 @@ body {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    font-size: 22px;
+    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -42,7 +42,7 @@ body {
 
 .recent-score {
     text-align: center;
-    font-size: 16px;
+    font-size: 0.9rem;
 }
 
 .recent-score span {
@@ -52,6 +52,7 @@ body {
 /*  Top row: stock, waste, foundations  */
 #piles {
   display: flex;
+  justify-content: space-between;
   gap: 20px;
   margin-top: 10px;
 }
@@ -62,6 +63,7 @@ body {
   width: var(--card-width);
   height: var(--card-height);
   position: relative;
+  flex-shrink: 0;
   box-sizing: border-box;
   background: #5fbb8a;
   border: 2px dashed rgba(255, 255, 255, 0.6);   /* the dotted border */
@@ -92,16 +94,18 @@ body {
   justify-content: center;
   align-items: flex-start;
   flex-direction: row;
-  gap: 38px;
-  margin-top: 3rem;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-shrink: 0;
 }
 
 .column {
     position: relative;
     width: var(--card-width);
-    display: flex;
+    display: block;
+    min-height: var(--card-height);
     flex-direction: column;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
 }
@@ -118,9 +122,10 @@ body {
   padding: 6px;
   background: white;
   color: black;
-  border: 1px solid #999;
+  border: 0;
+  box-shadow: 0px 0px 0px 0.03rem #999 inset;
   border-radius: 6px;
-  font-size: 22px;
+  font-size: 1rem;
   line-height: normal;
   text-align: left;
 }
@@ -136,6 +141,7 @@ body {
     transparent 6px 12px
   );
   border: 4px solid white;
+  box-shadow: 0px 0px 0px 0px #999 inset;
 }
 
 .first-column-card {
@@ -144,17 +150,18 @@ body {
 }
 
 .tableu-card {
-  position: sticky;  
+  position: relative;  
   background-color: aliceblue;
-  margin-top: -8rem;
+  margin-top: -6.6rem;
 }
 
 .column :nth-child(2) {
-  margin-top: -150px;
+  margin-top: -8rem;
 }
 
 .tableu-card * {
   position: absolute;
+  left: 0;
   margin-top: 1.5rem;
 }
 
@@ -175,20 +182,20 @@ body {
 
 
 #buttons {
-  position: absolute;
+  position: fixed;
   left: 40px;
   bottom: 30px;
   display: flex;
   gap: 20px;
-  margin-top: 30px;
+  bottom: 1rem;
 }
 
 button {
-  padding: 14px 24px;
+  padding: 0.8rem 1.6rem;
   background: #e8e8e8;
   border: none;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 0.7rem;
   font-weight: bold;
   cursor: pointer;
 }
@@ -253,8 +260,8 @@ button:hover { background: #d4d4d4; }
 
 #timer {
     font-family: Arial, sans-serif;
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: bold;
-    padding: 10px;
+    padding: 7px;
     color: white;
 }
