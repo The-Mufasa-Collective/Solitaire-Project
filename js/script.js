@@ -843,10 +843,21 @@ if (savedScore !== null) {
     document.getElementById("score").innerText = "00:00";
 }
 
+// Show the fastest saved time when the game opens.
+let bestTime = localStorage.getItem("solitaireBestTime");
+if (bestTime !== null) {
+    document.getElementById("best-time").innerText = formatTime(Number(bestTime));
+}
+
 // Save this game's time, then start the next game from zero.
 document.getElementById("restart").addEventListener("click", function() {
     localStorage.setItem("solitaireScore", totalSeconds);
     document.getElementById("score").innerText = formatTime(totalSeconds);
+
+    // A lower time means a faster game.
+    if (bestTime === null || totalSeconds < Number(bestTime)) {
+        localStorage.setItem("solitaireBestTime", totalSeconds);
+    }
 
     //proposal: easiet way to start a new game is by reloading the page. The game is time is picked up from storage
     window.location.reload();
