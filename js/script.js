@@ -148,15 +148,12 @@ function sameSuit(card, foundation) {
     }
 };
 
-//for test only, finds the hearts box and tries the sameSuit function
-// const heartsBox = document.querySelector('[data-suit="hearts"]');
-// // console.log(sameSuit(heartsAceElement, heartsBox));
-// // console.log(sameSuit(clubsAceElement, heartsBox)); 
-
 
 function goesOnFoundation(card, foundation){ //card on top of the box or null if the box is empty
-    const topCard = foundation.lastElementChild;
-
+    
+    if (card.children.length > 0) return false;
+    const topCard= foundation.lastElementChild;
+    
     if (sameSuit (card, foundation)) {
 
         if (topCard === null) { //empty box, only ace is allowed
@@ -209,8 +206,11 @@ for (const foundation of foundationPile) {
                 foundation.appendChild(selected);   //move the card into the box
                 selected.classList.add('foundation-card');
                 selected.classList.remove('tableu-card');
+                selected.classList.remove('waste-card');
+                selected.classList.remove('stock-card');
                 selected = null;                    //hand is emtpy now
                 revealedCardDirection();
+                checkForMoves();
             }
         }
     });
@@ -254,13 +254,6 @@ for (const column of columns) {
     ) {
         selected = e.target.closest(".tableu-card");
         selectedStack = [];
-
-        let sibling = selected.nextElementSibling;
-
-        while (sibling) {
-            selectedStack.push(sibling);
-            sibling = sibling.nextElementSibling;
-        }
     } else {
         selected = null;
         selectedStack = [];
@@ -273,6 +266,7 @@ column.addEventListener("dragover", function(e) {
         e.preventDefault();
     } else if (
         e.target.closest(".tableu-card")?.object &&
+        e.target.closest(".tableu-card")?.children.length === 0 &&
         selected?.object &&
         e.target.closest(".tableu-card").object.value === selected.object.value + 1 &&
         e.target.closest(".tableu-card").object.color !== selected.object.color
@@ -290,6 +284,7 @@ column.addEventListener("drop", function(e) {
     } else if (
         selected &&
         e.target.closest(".tableu-card")?.object &&
+        e.target.closest(".tableu-card")?.children.length === 0 &&
         e.target.closest(".tableu-card").object.value === selected.object.value + 1 &&
         e.target.closest(".tableu-card").object.color !== selected.object.color
     ) {
@@ -307,6 +302,7 @@ column.addEventListener("drop", function(e) {
     selected = null;
     selectedStack = [];
     revealedCardDirection();
+    checkForMoves();
 })};
 
 //TABLEU CARD DIRECTIONS
@@ -386,19 +382,24 @@ stockPile.addEventListener("click", function(e) {
         e.target.classList.add('waste-card');
         e.target.setAttribute('draggable', true);
         wastePileCardDirection();
+        checkForMoves();
     } else if (e.target === stockPile &&
         stockPile.children.length === 0 &&
         wastePile.children.length > 0
     ) {
-        while (wastePile.lastElementChild) {
-            const returningCard = wastePile.lastElementChild;
-            returningCard.classList.remove('waste-card');
-            returningCard.classList.add('stock-card');
-            returningCard.setAttribute('draggable', false);
-            stockPile.appendChild(returningCard);
-        }
-         stockPileCardDirection();
-    }
+    while (wastePile.lastElementChild // Returns cards one by one to ensure the order remains the same as at game start
+    ) {
+    const returningCard = wastePile.lastElementChild;
+    returningCard.classList.remove('waste-card');
+    returningCard.classList.add('stock-card');
+    returningCard.setAttribute('draggable', false);
+    stockPile.appendChild(returningCard);
+  }
+
+  stockPileCardDirection();
+  console.log("Stock pile recycled.");
+  checkForMoves();
+}
 });
 
 //CHANGE CURSOR WHEN BOTH STOCK AND WASTE PILES ARE EMPTY
@@ -423,6 +424,309 @@ wastePile.addEventListener("dragstart", function(e) {
         e.preventDefault();
     }
 });
+
+
+//CHECK FOR MOVES
+//========================================================
+
+function checkForMoves() {
+
+const tableuCards = document.querySelectorAll('.tableu-card');
+const foundationCards = document.querySelectorAll('.foundation-card');
+const wasteCards = document.querySelectorAll('.waste-card');
+const stockCards = document.querySelectorAll('.stock-card');
+
+
+// 1. Checks for moves within tableu 
+
+    function tableuToTableuMove() {
+
+        let tableuToTableuMoveFound = false;
+
+        for (const movableCard of tableuCards) {
+            if (movableCard.classList.contains("back")) continue;
+
+        for (const movePair of tableuCards) {
+            if (
+                movePair !== movableCard &&
+                movePair.children.length === 0 &&
+                movePair.object.value === movableCard.object.value + 1 &&
+                movePair.object.color !== movableCard.object.color &&
+                blockTableuMoveLoop(movableCard, movePair) &&
+                !movePair.classList.contains("back") 
+            ) {
+                tableuToTableuMoveFound = true;
+                console.log("Tableu to tableu move found:", movableCard, movePair);
+            }
+        }
+        }
+    
+    // Below function blocks an available move from being read if the card to be moved is already on top of a card of the same color and value as the potential parent card match, and the existing parent can't be moved to foundation
+
+    function blockTableuMoveLoop(movableCard, movePair) {
+
+        let allowTableuMove = true;
+
+        const parentCard = movableCard.parentElement?.closest(".tableu-card")
+
+        if (!parentCard?.object) return allowTableuMove;
+        
+        if (
+            movePair.object.value !== parentCard.object.value ||
+            movePair.object.color !== parentCard.object.color
+        ) {
+            return allowTableuMove;
+        }
+
+        for (const pile of foundationPile) {
+            if (
+                parentCard.object.value === pile.lastElementChild?.object?.value + 1 &&
+                parentCard.object.suit === pile.dataset.suit
+            ) { 
+                return allowTableuMove;
+            } 
+        }
+        allowTableuMove = false;
+        return allowTableuMove;
+    }
+
+    return tableuToTableuMoveFound;
+
+    }
+
+// 2. Checks for moves from tableu to foundation
+
+    function tableuToFoundationMove() {
+
+        let tableuToFoundationMoveFound = false;
+
+        for (const movableCard of tableuCards) {
+            if (
+                movableCard.classList.contains("back") || 
+                movableCard.children.length > 0
+            ) continue;
+        
+        for (const movePair of foundationCards) {
+            for (const pile of foundationPile) {
+            if (
+                movePair.object.value === movableCard.object.value - 1 &&
+                movePair.object.suit === movableCard.object.suit
+            ) {
+                tableuToFoundationMoveFound = true
+                console.log("Tableu to foundation move found:", movableCard, movePair)
+            }
+        }
+        }
+        }
+
+        return tableuToFoundationMoveFound;
+    }
+
+// 3. Checks for moves from waste pile to tableu
+    
+    function wasteToTableuMove() {
+        
+        let wasteToTableuMoveFound = false;
+
+    for (const movableCard of wasteCards) {
+
+        for (const movePair of tableuCards) {
+            if (
+                movePair.children.length === 0 &&
+                movePair.object.value === movableCard.object.value + 1 &&
+                movePair.object.color !== movableCard.object.color &&
+                !movePair.classList.contains("back")
+            ){
+                wasteToTableuMoveFound = true
+                console.log("Waste pile to tableu move found:", movableCard, movePair)
+            }
+        }
+        }
+
+    return wasteToTableuMoveFound;
+
+    }
+
+// 4. Checks for moves from waste pile to foundation
+
+    function wasteToFoundationMove() {
+
+        let wasteToFoundationMoveFound = false;
+
+        for (const movableCard of wasteCards) {
+
+        for (const movePair of foundationCards) {
+            for (const pile of foundationPile) {
+            if (
+                movePair.object.value === movableCard.object.value - 1 &&
+                movePair.object.suit === movableCard.object.suit
+            ) {
+                wasteToFoundationMoveFound = true
+                console.log("Waste pile to foundation move found:", movableCard, movePair)
+            }
+        }
+        }
+        }
+
+        return wasteToFoundationMoveFound;
+    }
+
+// 5. Checks for moves from stock pile to tableu
+    function stockToTableuMove() {
+        
+        let stockToTableuMoveFound = false;
+
+    for (const movableCard of stockCards) {
+        
+        for (const movePair of tableuCards) {
+            if (
+                movePair.children.length === 0 &&
+                movePair.object.value === movableCard.object.value + 1 &&
+                movePair.object.color !== movableCard.object.color &&
+                !movePair.classList.contains("back")
+            ){
+                stockToTableuMoveFound = true
+                console.log("Stock pile to tableu move found:", movableCard, movePair)
+            }
+        }
+        }
+        return stockToTableuMoveFound;
+    }
+
+// 6. Checks for moves from stock pile to foundation
+
+    function stockToFoundationMove() {
+
+        let stockToFoundationMoveFound = false;
+
+        for (const movableCard of stockCards) {
+
+        for (const pile of foundationPile) {
+        for (const movePair of foundationCards) {
+            if (
+                movePair.object.value === movableCard.object.value - 1 &&
+                movePair.object.suit === movableCard.object.suit &&
+                movePair === pile.lastElementChild
+            ) {
+                stockToFoundationMoveFound = true
+                console.log("Waste pile to foundation move found:", movableCard, movePair)
+            }
+        }
+        }
+        }
+
+        return stockToFoundationMoveFound;
+    }
+
+// 7. Checks for kings that can be moved to an empty column and prevents a loop of moving a king already in an empty column to other empty columns
+
+    function kingToEmptyColumnMove() {
+        
+        let kingToEmptyColumnMoveFound = false;
+
+        for (const column of columns) {
+            if (column.children.length !== 1) continue;
+
+            for (const movableCard of tableuCards) {
+                if (
+                    movableCard.object.value === 13 &&
+                    !movableCard.classList.contains("back") &&
+                    !movableCard.previousElementSibling?.classList.contains("empty-column") // Blocks a move if a king is already in an empty column
+                ) {
+                    kingToEmptyColumnMoveFound = true
+                    console.log("Tableu king to empty column move found:", movableCard, column)
+                }
+            }
+            
+            for (const movableCard of wasteCards) {
+                if (movableCard.object.value === 13)
+                    {
+                    kingToEmptyColumnMoveFound = true
+                    console.log("Waste pile king to empty column move found:", movableCard, column)
+                }
+            }
+
+            for (const movableCard of stockCards) {
+                if (movableCard.object.value === 13)
+                    {
+                    kingToEmptyColumnMoveFound = true
+                    console.log("Stock pile king to empty column move found:", movableCard, column)
+                }
+            }
+        } 
+
+        return kingToEmptyColumnMoveFound;
+    }
+
+// 8. Checks moves for aces to be moved to an empty foundation pile of the same suit
+
+    function aceToEmptyFoundationMove() {
+        
+        let aceToEmptyFoundationMoveFound = false;
+
+        for (const pile of foundationPile) {
+            if (pile.children.length !== 0) continue;
+
+            for (const movableCard of tableuCards) {
+                if (
+                    movableCard.object.value === 1 &&
+                    !movableCard.classList.contains("back") &&
+                    movableCard.object.suit === pile.dataset.suit &&
+                    movableCard !== pile.lastElementChild // Blocks a move if an ace is already in an empty foundation
+                ) {
+                    aceToEmptyFoundationMoveFound = true
+                    console.log("Tableu ace to empty foundation pile move found:", movableCard, pile)
+                }
+            }
+            
+            for (const movableCard of wasteCards) {
+                if (
+                    movableCard.object.value === 1 &&
+                    movableCard.object.suit === pile.dataset.suit
+                )
+                    {
+                    aceToEmptyFoundationMoveFound = true
+                    console.log("Waste pile ace to empty foundation pile found:", movableCard, pile)
+                }
+            }
+
+            for (const movableCard of stockCards) {
+                if (movableCard.object.value === 1 &&
+                    movableCard.object.suit === pile.dataset.suit
+                )
+                    {
+                    aceToEmptyFoundationMoveFound = true
+                    console.log("Stock pile ace to empty foundation pile found:", movableCard, pile)
+                }
+            }
+        } 
+
+        return aceToEmptyFoundationMoveFound;
+    }
+
+// Checks if there is available moves in any section and reports true if there is even one move available. Reports false only if there is no moves anywhere.
+
+    let movesAvailable = false;
+
+    if (tableuToTableuMove()) movesAvailable = true;
+    if (tableuToFoundationMove()) movesAvailable = true;
+    if (wasteToTableuMove()) movesAvailable = true;
+    if (wasteToFoundationMove()) movesAvailable = true;
+    if (stockToTableuMove()) movesAvailable = true;
+    if (stockToFoundationMove()) movesAvailable = true;
+    if (kingToEmptyColumnMove()) movesAvailable = true;
+    if (aceToEmptyFoundationMove()) movesAvailable = true;
+
+    console.log("Moves available:", movesAvailable);
+
+    if (movesAvailable === false) {
+        alert("No more moves available.");
+    }
+
+    return movesAvailable;
+}
+
+checkForMoves();
 
 
 // INSTRUCTIONS
