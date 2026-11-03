@@ -79,9 +79,9 @@ function renderCard(card) {
 
     cardElement.setAttribute("class", `card ${card.color}`)
     cardElement.setAttribute("draggable", true)
-    cardElement.innerHTML = `
-            <div> ${getCardValue(card.value)} </div>
-            <div> ${getSuitSymbol(card.suit)} </div>
+    cardElement.textContent = `
+            ${getCardValue(card.value)}
+            ${getSuitSymbol(card.suit)}
         `;
 
     return cardElement;
@@ -331,15 +331,59 @@ function revealedCardDirection() {
             if (card === column.lastElementChild) {
                 if (card.classList.contains("back")) {
                     card.classList.remove('back');
-                    card.innerHTML = `
-                        <div> ${getCardValue(card.object.value)} </div>
-                        <div> ${getSuitSymbol(card.object.suit)} </div>
+                    card.textContent = `
+                        ${getCardValue(card.object.value)}
+                        ${getSuitSymbol(card.object.suit)}
                     `;
                 }
             }
         }
     }
 };
+
+//TABLEU PLACEHOLDER CARDS
+//========================================================
+
+const diamondKings = {
+    color: "red",
+    suit: "diamonds",
+    value: 13,
+};
+
+for (const diamondKing of document.querySelectorAll('#diamond-king')){
+    diamondKing.object = diamondKings;
+}
+
+const spadeQueens = {
+    color: "black",
+    suit: "spades",
+    value: 12,
+};
+
+for (const spadesQueen of document.querySelectorAll('#spades-queen')){
+    spadesQueen.object = spadeQueens;
+}
+
+const heartsJacks = {
+    color: "red",
+    suit: "hearts",
+    value: 11,
+};
+
+for (const heartsJack of document.querySelectorAll('#hearts-jack')){
+    heartsJack.object = heartsJacks;
+}
+
+const clubsTens = {
+    color: "black",
+    suit: "clubs",
+    value: 10,
+};
+
+for (const clubsTen of document.querySelectorAll('#clubs-ten')){
+    clubsTen.object = clubsTens;
+}
+
 
 //STOCK PILE CARD DIRECTION
 //========================================================
@@ -362,9 +406,9 @@ function wastePileCardDirection() {
 
     for (const card of cardsInWaste) {
             card.classList.remove('back');
-            card.innerHTML = `
-                    <div> ${getCardValue(card.object.value)} </div>
-                    <div> ${getSuitSymbol(card.object.suit)} </div>
+            card.textContent = `
+                    ${getCardValue(card.object.value)}
+                    ${getSuitSymbol(card.object.suit)}
             `;
     }
 }
