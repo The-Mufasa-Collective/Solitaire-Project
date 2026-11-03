@@ -1,43 +1,15 @@
-/*
-*   Main method
-*   responsible for setup and cleanup of the game for restarts
 
-function main() {
-    let gameDeck = [];
 
-    gameDeck = createStartingDeck();
-
-    gameLoop(gameDeck);
-}*/
-
-/*
-*   game loop method
-*   responsible for playing the game, 
-*   i.e: react to player input and serve card, track score, ect
-*/
-/*
-function gameLoop(gameDeck) {
-    console.log(gameDeck);
-
-    renderStock(gameDeck)
-    gameDeck[0].hidden = false;
-    serveCardToColumn(gameDeck[0], "column1");
+function loadTimeFromStorage() {
+    let totalSeconds = localStorage.getItem("solitaireScore");
+    if(totalSeconds == null) return;
+    document.getElementById("score").innerText = formatTime(totalSeconds);
 }
 
-function renderStock(gameDeck) {
-    let stock = document.getElementById("stock");
-
-    gameDeck.forEach(card => {
-        stock.appendChild(renderCard(card))
-    });
-}
-
-function serveCardToColumn(servedCard, targetPile) {
-    let pile = document.getElementById(targetPile);
-    pile.appendChild(renderCard(servedCard))
-}
+loadTimeFromStorage()
 
 // create a fresh deck of cards and shuffles it
+// color is implied by the suit
 function createStartingDeck() {
     let deck = [];
 
@@ -45,21 +17,25 @@ function createStartingDeck() {
         deck.push({
             value: i,
             hidden: true,
+            color: "black",
             suit: "spades"
         });
         deck.push({
             value: i,
             hidden: true,
+            color: "red",
             suit: "hearts"
         });
         deck.push({
             value: i,
             hidden: true,
+            color: "red",
             suit: "diamonds"
         });
         deck.push({
             value: i,
             hidden: true,
+            color: "black",
             suit: "clubs"
         });
     }
@@ -82,45 +58,72 @@ function createStartingDeck() {
     return deck;
 }
 
+function getSuitSymbol(suit){
+        if(suit == "hearts") return "♥";
+        else if(suit == "spades") return "♠";
+        else if(suit == "diamonds") return "♦";
+        else if(suit == "clubs") return "♣";
+}
+
+function getCardValue(value) {
+    if(value === 1) return "A";
+    else if(value === 11) return "J";
+    else if(value === 12) return "Q";
+    else if(value === 13) return "K";
+    else return value;
+}
+
 function renderCard(card) {
     let cardElement = document.createElement("div")
     cardElement.setAttribute("id", `card-${card.suit}-${card.value}`)
 
-    if (card.hidden) {
-        cardElement.setAttribute("class", "card back")
-    } else {
+    cardElement.setAttribute("class", `card ${card.color}`)
+    cardElement.setAttribute("draggable", true)
+    cardElement.innerHTML = `
+            <div> ${getCardValue(card.value)} </div>
+            <div> ${getSuitSymbol(card.suit)} </div>
+        `;
 
-        // compute display value
-        let cardDisplayValue;
-
-        if(card.value === 1) cardDisplayValue = "A";
-        else if(card.value === 11) cardDisplayValue = "J";
-        else if(card.value === 12) cardDisplayValue = "Q";
-        else if(card.value === 13) cardDisplayValue = "K";
-        else cardDisplayValue = card.value;
-
-        //compute suite
-        let suitDisplay;
-
-        if(card.suit == "hearts") suitDisplay = "♥";
-        else if(card.suit == "spades") suitDisplay = "♠";
-        else if(card.suit == "diamonds") suitDisplay = "♦";
-        else if(card.suit == "clubs") suitDisplay = "♣";
-
-
-        cardElement.setAttribute("class", "card")
-        cardElement.innerHTML = `
-                <div> ${cardDisplayValue} </div>
-                <div> ${suitDisplay} </div>
-                <div> ${cardDisplayValue} </div>
-            `;
-
-    }
     return cardElement;
 }
 
-//run the game
-main(); */
+
+function renderStock(gameDeck) {
+    let stock = document.getElementById("stock");
+
+    gameDeck.forEach(card => {
+        let cardElement = document.createElement("div")
+        cardElement.setAttribute("id", `card-${card.suit}-${card.value}`)
+        cardElement.setAttribute("class", `card ${card.color} stock-card`)
+        cardElement.setAttribute("draggable", false)
+
+        cardElement.object = card
+
+        stock.appendChild(cardElement)
+    });
+}
+
+function prepareGameCards( )  {
+    let gameDeck = createStartingDeck();
+
+    // Distribute cards to columns:
+    for (i = 1; i <= 7; i++) {
+        let column = document.getElementById(`column${i}`);
+
+        for (j = 1; j <= i; j++) {
+            //Pick first card from deck
+            const card = gameDeck.splice(0, 1)[0];
+            let renderedCard = renderCard(card);
+            renderedCard.classList.add("tableu-card");
+            renderedCard.object = card;
+            column.appendChild(renderedCard)
+        }
+    }
+    // render the remaining card in the stock.
+    renderStock(gameDeck);
+}
+
+prepareGameCards();
 
 //FOUNDATION BEHAVIOR
 //========================================================
@@ -175,12 +178,12 @@ function goesOnFoundation(card, foundation){ //card on top of the box or null if
 
 
 //for test only, anette has done this part so delete after testing
-/* const allCards = document.querySelectorAll(".tableu-card");
-for (const card of allCards) {
-    card.addEventListener("dragstart", function() {
-        selected = card;
-    });
-} */
+//  const allCards = document.querySelectorAll(".tableu-card");
+// for (const card of allCards) {
+//     card.addEventListener("dragstart", function() {
+//         selected = card;
+//     });
+// }
 
 // does for each of the 4 foundation boxes
 for (const foundation of foundationPile) {
@@ -312,6 +315,7 @@ function gameStartCardDirection() {
         for (const card of cardsInColumn) {
             if (card !== column.lastElementChild) {
                 card.classList.add('back');
+                card.innerHTML = "";
             }
         }
     }
@@ -325,533 +329,17 @@ function revealedCardDirection() {
 
         for (const card of cardsInColumn) {
             if (card === column.lastElementChild) {
-                card.classList.remove('back');
+                if (card.classList.contains("back")) {
+                    card.classList.remove('back');
+                    card.innerHTML = `
+                        <div> ${getCardValue(card.object.value)} </div>
+                        <div> ${getSuitSymbol(card.object.suit)} </div>
+                    `;
+                }
             }
         }
     }
 };
-
-//TABLEU PLACEHOLDER CARDS
-//========================================================
-
-// Diamond
-const diamondKings = {
-    color: "red",
-    suit: "diamonds",
-    value: 13,
-};
-
-for (const diamondKing of document.querySelectorAll('#diamond-king')){
-    diamondKing.object = diamondKings;
-}
-const diamondQueens = {
-    color: "red",
-    suit: "diamonds",
-    value: 12,
-};
-
-for (const diamondQueen of document.querySelectorAll('#diamond-queen')){
-    diamondQueen.object = diamondQueens;
-}
-
-const diamondJacks = {
-    color: "red",
-    suit: "diamonds",
-    value: 11,
-};
-
-for (const diamondJack of document.querySelectorAll('#diamond-jack')){
-    diamondJack.object = diamondJacks;
-}
-const diamondTens = {
-    color: "red",
-    suit: "diamonds",
-    value: 10,
-};
-
-for (const diamondTen of document.querySelectorAll('#diamond-ten')){
-    diamondTen.object = diamondTens;
-}
-
-const diamondNines = {
-    color: "red",
-    suit: "diamonds",
-    value: 9,
-};
-
-for (const diamondNine of document.querySelectorAll('#diamond-nine')){
-    diamondNine.object = diamondNines;
-}
-
-const diamondEights = {
-    color: "red",
-    suit: "diamonds",
-    value: 8,
-};
-
-for (const diamondEight of document.querySelectorAll('#diamond-eight')){
-    diamondEight.object = diamondEights;
-}
-
-const diamondSevens = {
-    color: "red",
-    suit: "diamonds",
-    value: 7,
-};
-
-for (const diamondSeven of document.querySelectorAll('#diamond-seven')){
-    diamondSeven.object = diamondSevens;
-}
-
-const diamondSixes = {
-    color: "red",
-    suit: "diamonds",
-    value: 6,
-};
-
-for (const diamondSix of document.querySelectorAll('#diamond-six')){
-    diamondSix.object = diamondSixes;
-}
-
-const diamondFives = {
-    color: "red",
-    suit: "diamonds",
-    value: 5,
-};
-
-for (const diamondFive of document.querySelectorAll('#diamond-five')){
-    diamondFive.object = diamondFives;
-}
-
-const diamondFours = {
-    color: "red",
-    suit: "diamonds",
-    value: 4,
-};
-
-for (const diamondFour of document.querySelectorAll('#diamond-four')){
-    diamondFour.object = diamondFours;
-}
-
-const diamondThrees = {
-    color: "red",
-    suit: "diamonds",
-    value: 3,
-};
-
-for (const diamondThree of document.querySelectorAll('#diamond-three')){
-    diamondThree.object = diamondThrees;
-}
-
-const diamondTwos = {
-    color: "red",
-    suit: "diamonds",
-    value: 2,
-};
-
-for (const diamondTwo of document.querySelectorAll('#diamond-two')){
-    diamondTwo.object = diamondTwos;
-}
-
-const diamondAces = {
-    color: "red",
-    suit: "diamonds",
-    value: 1,
-};
-
-for (const diamondAce of document.querySelectorAll('#diamond-ace')){
-    diamondAce.object = diamondAces;
-}
-
-// Heart
-
-const heartKings = {
-    color: "red",
-    suit: "hearts",
-    value: 13,
-};
-
-for (const heartKing of document.querySelectorAll('#heart-king')){
-    heartKing.object = heartKings;
-}
-const heartQueens = {
-    color: "red",
-    suit: "hearts",
-    value: 12,
-};
-
-for (const heartQueen of document.querySelectorAll('#heart-queen')){
-    heartQueen.object = heartQueens;
-}
-
-const heartJacks = {
-    color: "red",
-    suit: "hearts",
-    value: 11,
-};
-
-for (const heartJack of document.querySelectorAll('#heart-jack')){
-    heartJack.object = heartJacks;
-}
-const heartTens = {
-    color: "red",
-    suit: "hearts",
-    value: 10,
-};
-
-for (const heartTen of document.querySelectorAll('#heart-ten')){
-    heartTen.object = heartTens;
-}
-
-const heartNines = {
-    color: "red",
-    suit: "hearts",
-    value: 9,
-};
-
-for (const heartNine of document.querySelectorAll('#heart-nine')){
-    heartNine.object = heartNines;
-}
-
-const heartEights = {
-    color: "red",
-    suit: "hearts",
-    value: 8,
-};
-
-for (const heartEight of document.querySelectorAll('#heart-eight')){
-    heartEight.object = heartEights;
-}
-
-const heartSevens = {
-    color: "red",
-    suit: "hearts",
-    value: 7,
-};
-
-for (const heartSeven of document.querySelectorAll('#heart-seven')){
-    heartSeven.object = heartSevens;
-}
-
-const heartSixes = {
-    color: "red",
-    suit: "hearts",
-    value: 6,
-};
-
-for (const heartSix of document.querySelectorAll('#heart-six')){
-    heartSix.object = heartSixes;
-}
-
-const heartFives = {
-    color: "red",
-    suit: "hearts",
-    value: 5,
-};
-
-for (const heartFive of document.querySelectorAll('#heart-five')){
-    heartFive.object = heartFives;
-}
-
-const heartFours = {
-    color: "red",
-    suit: "hearts",
-    value: 4,
-};
-
-for (const heartFour of document.querySelectorAll('#heart-four')){
-    heartFour.object = heartFours;
-}
-
-const heartThrees = {
-    color: "red",
-    suit: "hearts",
-    value: 3,
-};
-
-for (const heartThree of document.querySelectorAll('#heart-three')){
-    heartThree.object = heartThrees;
-}
-
-const heartTwos = {
-    color: "red",
-    suit: "hearts",
-    value: 2,
-};
-
-for (const heartTwo of document.querySelectorAll('#heart-two')){
-    heartTwo.object = heartTwos;
-}
-
-const heartAces = {
-    color: "red",
-    suit: "hearts",
-    value: 1,
-};
-
-for (const heartAce of document.querySelectorAll('#heart-ace')){
-    heartAce.object = heartAces;
-}
-
-// Spades
-
-const spadeKings = {
-    color: "black",
-    suit: "spades",
-    value: 13,
-};
-
-for (const spadeKing of document.querySelectorAll('#spade-king')){
-    spadeKing.object = spadeKings;
-}
-const spadeQueens = {
-    color: "black",
-    suit: "spades",
-    value: 12,
-};
-
-for (const spadeQueen of document.querySelectorAll('#spade-queen')){
-    spadeQueen.object = spadeQueens;
-}
-
-const spadeJacks = {
-    color: "black",
-    suit: "spades",
-    value: 11,
-};
-
-for (const spadeJack of document.querySelectorAll('#spade-jack')){
-    spadeJack.object = spadeJacks;
-}
-const spadeTens = {
-    color: "black",
-    suit: "spades",
-    value: 10,
-};
-
-for (const spadeTen of document.querySelectorAll('#spade-ten')){
-    spadeTen.object = spadeTens;
-}
-
-const spadeNines = {
-    color: "black",
-    suit: "spades",
-    value: 9,
-};
-
-for (const spadeNine of document.querySelectorAll('#spade-nine')){
-    spadeNine.object = spadeNines;
-}
-
-const spadeEights = {
-    color: "black",
-    suit: "spades",
-    value: 8,
-};
-
-for (const spadeEight of document.querySelectorAll('#spade-eight')){
-    spadeEight.object = spadeEights;
-}
-
-const spadeSevens = {
-    color: "black",
-    suit: "spades",
-    value: 7,
-};
-
-for (const spadeSeven of document.querySelectorAll('#spade-seven')){
-    spadeSeven.object = spadeSevens;
-}
-
-const spadeSixes = {
-    color: "black",
-    suit: "spades",
-    value: 6,
-};
-
-for (const spadeSix of document.querySelectorAll('#spade-six')){
-    spadeSix.object = spadeSixes;
-}
-
-const spadeFives = {
-    color: "black",
-    suit: "spades",
-    value: 5,
-};
-
-for (const spadeFive of document.querySelectorAll('#spade-five')){
-    spadeFive.object = spadeFives;
-}
-
-const spadeFours = {
-    color: "black",
-    suit: "spades",
-    value: 4,
-};
-
-for (const spadeFour of document.querySelectorAll('#spade-four')){
-    spadeFour.object = spadeFours;
-}
-
-const spadeThrees = {
-    color: "black",
-    suit: "spades",
-    value: 3,
-};
-
-for (const spadeThree of document.querySelectorAll('#spade-three')){
-    spadeThree.object = spadeThrees;
-}
-
-const spadeTwos = {
-    color: "black",
-    suit: "spades",
-    value: 2,
-};
-
-for (const spadeTwo of document.querySelectorAll('#spade-two')){
-    spadeTwo.object = spadeTwos;
-}
-
-const spadeAces = {
-    color: "black",
-    suit: "spades",
-    value: 1,
-};
-
-for (const spadeAce of document.querySelectorAll('#spade-ace')){
-    spadeAce.object = spadeAces;
-}
-
-// Clubs
-
-const clubKings = {
-    color: "black",
-    suit: "clubs",
-    value: 13,
-};
-
-for (const clubKing of document.querySelectorAll('#club-king')){
-    clubKing.object = clubKings;
-}
-const clubQueens = {
-    color: "black",
-    suit: "clubs",
-    value: 12,
-};
-
-for (const clubQueen of document.querySelectorAll('#club-queen')){
-    clubQueen.object = clubQueens;
-}
-
-const clubJacks = {
-    color: "black",
-    suit: "clubs",
-    value: 11,
-};
-
-for (const clubJack of document.querySelectorAll('#club-jack')){
-    clubJack.object = clubJacks;
-}
-const clubTens = {
-    color: "black",
-    suit: "clubs",
-    value: 10,
-};
-
-for (const clubTen of document.querySelectorAll('#club-ten')){
-    clubTen.object = clubTens;
-}
-
-const clubNines = {
-    color: "black",
-    suit: "clubs",
-    value: 9,
-};
-
-for (const clubNine of document.querySelectorAll('#club-nine')){
-    clubNine.object = clubNines;
-}
-
-const clubEights = {
-    color: "black",
-    suit: "clubs",
-    value: 8,
-};
-
-for (const clubEight of document.querySelectorAll('#club-eight')){
-    clubEight.object = clubEights;
-}
-
-const clubSevens = {
-    color: "black",
-    suit: "clubs",
-    value: 7,
-};
-
-for (const clubSeven of document.querySelectorAll('#club-seven')){
-    clubSeven.object = clubSevens;
-}
-
-const clubSixes = {
-    color: "black",
-    suit: "clubs",
-    value: 6,
-};
-
-for (const clubSix of document.querySelectorAll('#club-six')){
-    clubSix.object = clubSixes;
-}
-
-const clubFives = {
-    color: "black",
-    suit: "clubs",
-    value: 5,
-};
-
-for (const clubFive of document.querySelectorAll('#club-five')){
-    clubFive.object = clubFives;
-}
-
-const clubFours = {
-    color: "black",
-    suit: "clubs",
-    value: 4,
-};
-
-for (const clubFour of document.querySelectorAll('#club-four')){
-    clubFour.object = clubFours;
-}
-
-const clubThrees = {
-    color: "black",
-    suit: "clubs",
-    value: 3,
-};
-
-for (const clubThree of document.querySelectorAll('#club-three')){
-    clubThree.object = clubThrees;
-}
-
-const clubTwos = {
-    color: "black",
-    suit: "clubs",
-    value: 2,
-};
-
-for (const clubTwo of document.querySelectorAll('#club-two')){
-    clubTwo.object = clubTwos;
-}
-
-const clubAces = {
-    color: "black",
-    suit: "clubs",
-    value: 1,
-};
-
-for (const clubAce of document.querySelectorAll('#club-ace')){
-    clubAce.object = clubAces;
-}
 
 //STOCK PILE CARD DIRECTION
 //========================================================
@@ -863,8 +351,9 @@ function stockPileCardDirection() {
 
     for (const card of cardsInStock) {
             card.classList.add('back');
-        }
-        }
+            card.innerHTML = "";
+    }
+}
 
         stockPileCardDirection();
 
@@ -873,8 +362,12 @@ function wastePileCardDirection() {
 
     for (const card of cardsInWaste) {
             card.classList.remove('back');
-        }
-        }
+            card.innerHTML = `
+                    <div> ${getCardValue(card.object.value)} </div>
+                    <div> ${getSuitSymbol(card.object.suit)} </div>
+            `;
+    }
+}
 
         wastePileCardDirection();
 
@@ -1290,6 +783,10 @@ if (savedScore !== null) {
 document.getElementById("restart").addEventListener("click", function() {
     localStorage.setItem("solitaireScore", totalSeconds);
     document.getElementById("score").innerText = formatTime(totalSeconds);
+
+    //proposal: easiet way to start a new game is by reloading the page. The game is time is picked up from storage
+    window.location.reload();
+
     resetTimer();
     startTimer();
 });
