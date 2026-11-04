@@ -209,6 +209,7 @@ for (const foundation of foundationPile) {
         selected = null; //hand is emtpy now
         revealedCardDirection();
         checkForMoves();
+        checkVictoryCondition(); // Check if the game has been won after a card is dropped in the foundation
       }
     }
   });
