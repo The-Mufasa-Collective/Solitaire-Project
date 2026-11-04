@@ -265,3 +265,36 @@ button:hover { background: #d4d4d4; }
     padding: 7px;
     color: white;
 }
+
+/* ------------------------------------------------ */
+/* Victory Pop-up */
+#victory-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Play Again button styling */
+#play-again {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: yellow;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#play-again:hover {
+  background-color: limegreen;
+}
+/* ------------------------------------------------ */
