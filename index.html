@@ -12,33 +12,54 @@
 
     <div id="top-bar">
       <div class="info">Time <span id="timer">00:00</span></div>
-      <div class="info">Score: <span id="score">0</span></div>
+      <div class="info recent-score">
+        <div>Most Recent Game's Time</div>
+        <span id="score">00:00</span>
+      </div>
+      <div class="info recent-score">
+        <div>Best Time</div>
+        <span id="best-time">--:--</span>
+      </div>
     </div>
 
     <!-- the foundations -->
     <div id="piles">
       <div id="stock" class="pile">
-        <div class="card back"></div> <!-- JS replaces it -->
       </div>
-      <div id="waste" class="pile"></div>
+      <div id="waste" class="pile">
+      </div>
 
       <div class="spacer"></div>
 
-      <div class="pile foundation black" data-suit="♣">♣</div>
-      <div class="pile foundation black" data-suit="♠">♠</div>
-      <div class="pile foundation red" data-suit="♦">♦</div>
-      <div class="pile foundation red" data-suit="♥">♥</div>
+      <div class="pile foundation black" data-suit="clubs">♣</div>
+      <div class="pile foundation black" data-suit="spades">♠</div>
+      <div class="pile foundation red" data-suit="diamonds">♦</div>
+      <div class="pile foundation red" data-suit="hearts">♥</div>
     </div>
 
-    <!-- The columns -->
+    <!-- The tableu -->
     <div id="columns">
-      <div class="column"></div>     
-      <div class="column"></div>
-      <div class="column"></div>
-      <div class="column"></div>
-      <div class="column"></div>
-      <div class="column"></div>
-      <div class="column"></div>
+      <div class="column" id="column1">
+        <div class="empty-column"></div>
+      </div>
+      <div class="column" id="column2">
+        <div class="empty-column"></div>
+      </div>
+      <div class="column" id="column3">
+        <div class="empty-column"></div>
+      </div>
+      <div class="column" id="column4">
+        <div class="empty-column"></div>
+      </div>
+      <div class="column" id="column5">
+        <div class="empty-column"></div>
+      </div>
+      <div class="column" id="column6">
+       <div class="empty-column"></div>
+      </div>
+      <div class="column" id="column7">
+        <div class="empty-column"></div>
+      </div>
     </div>
 
     <p id="message"></p>
@@ -48,8 +69,49 @@
       <button id="hint">Instructions</button>
     </div>
 
-  </div>
+<!----------------------------------->
+<!-- Instructions Pop-up Panel -->
+    <div id="instructions-modal" class="modal hidden">
+      <div class="instructions">
+        <h1 class="modal-title">How to play solitaire</h1>
+        <ol id="content-list">
+          <li>Click on a card to select it.</li>
+          <li>Click on a pile to move the selected card there.</li>
+          <li>Try to build sequences from Ace to King in each foundation.</li>
+        </ol>
+        <!-- Button to close the pop-up panel -->
+        <button id="close-instructions">Close</button>
+      </div>
+    </div>
 
-  <script src="script.js"></script>
+<!--------------------------------------------------->
+<!--- Victory Pop-up --->
+<div id="victory-modal" class="end-game-modal modal hidden">
+  <div class="instructions">
+    <h1 class="modal-title">🎉 Victory!</h1>
+    <p style="color: white; font-size: 20px;">Congratulations! You completed the game.</p>
+    <button id="play-again-victory" class="play-again">Play Again</button>
+  </div>
+</div>
+<!--------------------------------------------------->
+
+<!--------------------------------------------------->
+<!--- No More Moves Pop-up --->
+<div id="no-moves-modal" class="end-game-modal modal hidden">
+  <div class="instructions">
+    <h1 class="modal-title">Game Over</h1>
+    <p style="color: white; font-size: 20px;">Too bad! There are no more available moves.</p>
+    <button id="play-again-gameover" class="play-again">Play Again</button>
+  </div>
+</div>
+<!--------------------------------------------------->
+
+  </div> 
+</body>
+</html>
+
+
+
+
 </body>
 </html>

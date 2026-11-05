@@ -1,13 +1,14 @@
 /* Change these numbers to resize every card */
 :root {
-    --card-width: 105px;
-    --card-height: 150px;
+    --card-width: 5.5rem;
+    --card-height: 8rem;
 }
 
 body {
     margin: 0;
     background: #f1f3f9;
     font-family: sans-serif;
+    background: #165a3a;
 }
 
 #game {
@@ -15,18 +16,17 @@ body {
     width: 100%;
     min-height: 100vh;
     margin: 0;
-    padding: 30px 40px;
+    padding: 20px 40px;
     box-sizing: border-box;
-    background: #165a3a;
     color: white;
 }
 
 /*Time and score*/
 #top-bar {
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
-    padding-left: 420px;
-    font-size: 22px;
+    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -40,19 +40,30 @@ body {
     font-weight: normal;
 }
 
+.recent-score {
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.recent-score span {
+    margin: 6px auto 0;
+}
+
 /*  Top row: stock, waste, foundations  */
 #piles {
   display: flex;
+  justify-content: space-between;
   gap: 20px;
   margin-top: 10px;
 }
 
 .spacer { flex: 1; }   /* pushes the foundations to the right */
 
-.pile, .column {
+.pile, .empty-column {
   width: var(--card-width);
   height: var(--card-height);
   position: relative;
+  flex-shrink: 0;
   box-sizing: border-box;
   background: #5fbb8a;
   border: 2px dashed rgba(255, 255, 255, 0.6);   /* the dotted border */
@@ -63,17 +74,40 @@ body {
   font-size: 48px;
   line-height: var(--card-height);
   text-align: center;
+  position: relative;
 }
 
 .black { color: black; }
 .red   { color: crimson; }
 
+#stock {
+  cursor: pointer;
+  background-image: url("../assets/refresh-icon.svg");
+  background-size: 100px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 /* Columns */
 #columns {
   display: flex;
-  justify-content: flex-end;   /* leaves the empty space on the left */
-  gap: 38px;
-  margin-top: 70px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: row;
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-shrink: 0;
+}
+
+.column {
+    position: relative;
+    width: var(--card-width);
+    display: block;
+    min-height: var(--card-height);
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 
@@ -88,9 +122,10 @@ body {
   padding: 6px;
   background: white;
   color: black;
-  border: 1px solid #999;
+  border: 0;
+  box-shadow: 0px 0px 0px 0.03rem #999 inset;
   border-radius: 6px;
-  font-size: 22px;
+  font-size: 1rem;
   line-height: normal;
   text-align: left;
 }
@@ -106,29 +141,160 @@ body {
     transparent 6px 12px
   );
   border: 4px solid white;
+  box-shadow: 0px 0px 0px 0px #999 inset;
 }
 
+.first-column-card {
+    margin-top: 0px;
+    position: relative;
+}
+
+.tableu-card {
+  position: relative;  
+  background-color: aliceblue;
+  margin-top: -6.6rem;
+}
+
+.column :nth-child(2) {
+  margin-top: -8rem;
+}
+
+.tableu-card * {
+  position: absolute;
+  left: 0;
+  margin-top: 1.5rem;
+}
 
 .card[draggable="true"] { cursor: grab; }
 
+.card.stock-card {
+  cursor: pointer;
+}
+
+.card.waste-card {
+  cursor: grab;
+}
+
+.card.foundation-card {
+  position: absolute;
+  margin-top: 0;
+}
+
 
 #buttons {
-  position: absolute;
+  position: fixed;
   left: 40px;
   bottom: 30px;
   display: flex;
   gap: 20px;
-  margin-top: 30px;
+  bottom: 1rem;
 }
 
 button {
-  padding: 14px 24px;
+  padding: 0.8rem 1.6rem;
   background: #e8e8e8;
   border: none;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 0.7rem;
   font-weight: bold;
   cursor: pointer;
 }
 
 button:hover { background: #d4d4d4; }
+
+
+/* ------------------------------------------------ */
+/* Dark screen behind the box */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+/* Green  box styling */
+.instructions {
+  border: 2px solid yellow;
+  background-color: green;
+  padding: 20px;
+  max-width: 500px;
+  border-radius: 10px;
+   box-shadow: 5px 4px 8px limegreen;
+}
+
+/* heading */
+.modal-title {
+  font-size: 28px;
+  color: yellow;
+  margin-top: 0;
+}
+
+/*  list items */
+#content-list {
+  font-size: 18px;
+  color: white;
+}
+
+/* Close button */
+#close-instructions {
+  margin-top: 15px;
+  padding: 8px 16px;
+  background-color: yellow;
+  color: black;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Hide the modal */
+.hidden {
+  display: none !important;
+}
+/* ------------------------------------------------ */
+
+#timer {
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 7px;
+    color: white;
+}
+
+/* ------------------------------------------------ */
+/* Victory & Game Over Pop-up */
+.end-game-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Play Again button styling */
+.play-again {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: yellow;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.play-again:hover {
+  background-color: limegreen;
+}
+/* ------------------------------------------------ */
