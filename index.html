@@ -73,7 +73,7 @@
 <!-- Instructions Pop-up Panel -->
     <div id="instructions-modal" class="modal hidden">
       <div class="instructions">
-        <h1 id="content">How to play solitaire</h1>
+        <h1 class="modal-title">How to play solitaire</h1>
         <ol id="content-list">
           <li>Click on a card to select it.</li>
           <li>Click on a pile to move the selected card there.</li>
@@ -84,12 +84,34 @@
       </div>
     </div>
 
+<!--------------------------------------------------->
+<!--- Victory Pop-up --->
+<div id="victory-modal" class="end-game-modal modal hidden">
+  <div class="instructions">
+    <h1 class="modal-title">🎉 Victory!</h1>
+    <p style="color: white; font-size: 20px;">Congratulations! You completed the game.</p>
+    <button id="play-again-victory" class="play-again">Play Again</button>
+  </div>
+</div>
+<!--------------------------------------------------->
+
+<!--------------------------------------------------->
+<!--- No More Moves Pop-up --->
+<div id="no-moves-modal" class="end-game-modal modal hidden">
+  <div class="instructions">
+    <h1 class="modal-title">Game Over</h1>
+    <p style="color: white; font-size: 20px;">Too bad! There are no more available moves.</p>
+    <button id="play-again-gameover" class="play-again">Play Again</button>
+  </div>
+</div>
+<!--------------------------------------------------->
+
   </div> 
 </body>
 </html>
-<!--------------------------------------------------->
 
-  </div>
+
+
 
 </body>
 </html>
