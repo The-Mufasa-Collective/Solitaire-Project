@@ -792,16 +792,12 @@ function autoComplete(){
     autoCompleteButton.setAttribute("id","auto-complete");
     buttons.appendChild(autoCompleteButton);
     autoCompleteButton.textContent = "Auto-complete";
+    
     autoCompleteButton.addEventListener("click", function() {
-    localStorage.setItem("solitaireScore", totalSeconds);
-    document.getElementById("score").innerText = formatTime(totalSeconds);
-
-    // A lower time means a faster game.
-    if (bestTime === null || totalSeconds < Number(bestTime)) {
-        localStorage.setItem("solitaireBestTime", totalSeconds);
-    }
-
-    window.location.reload();
+        stopTimer;
+        if (victoryModal) {
+            victoryModal.classList.remove("hidden"); // Show victory popup
+        }
     });
 
 }
