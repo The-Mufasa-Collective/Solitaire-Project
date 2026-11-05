@@ -229,7 +229,7 @@ button:hover { background: #d4d4d4; }
 }
 
 /* heading */
-#content {
+.modal-title {
   font-size: 28px;
   color: yellow;
   margin-top: 0;
@@ -267,8 +267,8 @@ button:hover { background: #d4d4d4; }
 }
 
 /* ------------------------------------------------ */
-/* Victory Pop-up */
-#victory-modal {
+/* Victory & Game Over Pop-up */
+.end-game-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -282,7 +282,7 @@ button:hover { background: #d4d4d4; }
 }
 
 /* Play Again button styling */
-#play-again {
+.play-again {
   margin-top: 15px;
   padding: 10px 20px;
   background-color: yellow;
@@ -294,7 +294,7 @@ button:hover { background: #d4d4d4; }
   cursor: pointer;
 }
 
-#play-again:hover {
+.play-again:hover {
   background-color: limegreen;
 }
 /* ------------------------------------------------ */

@@ -788,11 +788,30 @@ function checkForMoves() {
 
   console.log("Moves available:", movesAvailable);
 
-  if (movesAvailable === false) {
-    alert("No more moves available.");
-  }
+  function noMoreMovesAlert() {
+    const noMoreMovesModal = document.getElementById("no-moves-modal");
+    const playAgainBtn = document.getElementById("play-again-gameover");
+    
+    if (noMoreMovesModal) {
+      noMoreMovesModal.classList.remove("hidden");
+     }
+    
+     if (playAgainBtn) {
+    playAgainBtn.addEventListener("click", function () {
+    window.location.reload();
+    });
+    }
+    }
 
-  return movesAvailable;
+    const gameWon =
+    document.querySelectorAll(".foundation-card").length === 52;
+
+    if (movesAvailable === false && !gameWon) {
+    stopTimer();
+    noMoreMovesAlert();
+    }
+
+    return movesAvailable;
 }
 
 checkForMoves();
@@ -875,19 +894,10 @@ if (bestTime !== null) {
 
 // Save this game's time, then start the next game from zero.
 document.getElementById("restart").addEventListener("click", function () {
-  localStorage.setItem("solitaireScore", totalSeconds);
-  document.getElementById("score").innerText = formatTime(totalSeconds);
+    window.location.reload();
 
-  // A lower time means a faster game.
-  if (bestTime === null || totalSeconds < Number(bestTime)) {
-    localStorage.setItem("solitaireBestTime", totalSeconds);
-  }
-
-  //proposal: easiet way to start a new game is by reloading the page. The game is time is picked up from storage
-  window.location.reload();
-
-  resetTimer();
-  startTimer();
+  // resetTimer();
+  // startTimer();
 });
 
 // Automatically start the timer when the script loads
@@ -899,7 +909,7 @@ startTimer();
 //-------------------------------------------------//
 // Get Victory Modal and Play Again button elements
 const victoryModal = document.getElementById("victory-modal");
-const playAgainBtn = document.getElementById("play-again");
+const playAgainBtn = document.getElementById("play-again-victory");
 
 // Checks if all 52 cards have been placed in the foundation piles (13 in each of the 4 piles)
 function checkVictoryCondition() {
@@ -918,7 +928,12 @@ function checkVictoryCondition() {
 // Reload the game when "Play Again" button is clicked inside the victory popup
 if (playAgainBtn) {
   playAgainBtn.addEventListener("click", function () {
+    localStorage.setItem("solitaireScore", totalSeconds);
+    document.getElementById("score").innerText = formatTime(totalSeconds);
+    if (bestTime === null || totalSeconds < Number(bestTime)) {
+    localStorage.setItem("solitaireBestTime", totalSeconds);}
     window.location.reload();
+
   });
 }
 
