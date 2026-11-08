@@ -788,6 +788,12 @@ function autoComplete(){
             return;
         }
     }
+    //added this to stop creating button if it already exists
+    if (document.querySelector("#Auto-complete")){
+      return;
+
+    }
+
     let autoCompleteButton = document.createElement("button");
     autoCompleteButton.setAttribute("id","auto-complete");
     buttons.appendChild(autoCompleteButton);
