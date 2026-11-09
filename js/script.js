@@ -1,5 +1,3 @@
-
-
 function loadTimeFromStorage() {
     let totalSeconds = localStorage.getItem("solitaireScore");
     if(totalSeconds == null) return;
@@ -57,14 +55,6 @@ function createStartingDeck() {
 
     return deck;
 }
-
-function getSuitSymbol(suit){
-        if(suit == "hearts") return "♥";
-        else if(suit == "spades") return "♠";
-        else if(suit == "diamonds") return "♦";
-        else if(suit == "clubs") return "♣";
-}
-
 function getCardValue(value) {
     if(value === 1) return "A";
     else if(value === 11) return "J";
@@ -73,15 +63,23 @@ function getCardValue(value) {
     else return value;
 }
 
+function getSuitSymbol(suit){
+        if(suit == "hearts") return "♥";
+        else if(suit == "spades") return "♠";
+        else if(suit == "diamonds") return "♦";
+        else if(suit == "clubs") return "♣";
+}
+
+
 function renderCard(card) {
     let cardElement = document.createElement("div")
     cardElement.setAttribute("id", `card-${card.suit}-${card.value}`)
 
     cardElement.setAttribute("class", `card ${card.color}`)
     cardElement.setAttribute("draggable", true)
-    cardElement.innerHTML = `
-            <div> ${getCardValue(card.value)} </div>
-            <div> ${getSuitSymbol(card.suit)} </div>
+    cardElement.textContent = `
+            ${getCardValue(card.value)}
+            ${getSuitSymbol(card.suit)}
         `;
 
     return cardElement;
@@ -211,6 +209,7 @@ for (const foundation of foundationPile) {
                 selected = null;                    //hand is emtpy now
                 revealedCardDirection();
                 checkForMoves();
+                autoComplete();
             }
         }
     });
@@ -303,6 +302,7 @@ column.addEventListener("drop", function(e) {
     selectedStack = [];
     revealedCardDirection();
     checkForMoves();
+    autoComplete();
 })};
 
 //TABLEU CARD DIRECTIONS
@@ -331,15 +331,59 @@ function revealedCardDirection() {
             if (card === column.lastElementChild) {
                 if (card.classList.contains("back")) {
                     card.classList.remove('back');
-                    card.innerHTML = `
-                        <div> ${getCardValue(card.object.value)} </div>
-                        <div> ${getSuitSymbol(card.object.suit)} </div>
+                    card.textContent = `
+                        ${getCardValue(card.object.value)}
+                        ${getSuitSymbol(card.object.suit)}
                     `;
                 }
             }
         }
     }
 };
+
+//TABLEU PLACEHOLDER CARDS
+//========================================================
+
+const diamondKings = {
+    color: "red",
+    suit: "diamonds",
+    value: 13,
+};
+
+for (const diamondKing of document.querySelectorAll('#diamond-king')){
+    diamondKing.object = diamondKings;
+}
+
+const spadeQueens = {
+    color: "black",
+    suit: "spades",
+    value: 12,
+};
+
+for (const spadesQueen of document.querySelectorAll('#spades-queen')){
+    spadesQueen.object = spadeQueens;
+}
+
+const heartsJacks = {
+    color: "red",
+    suit: "hearts",
+    value: 11,
+};
+
+for (const heartsJack of document.querySelectorAll('#hearts-jack')){
+    heartsJack.object = heartsJacks;
+}
+
+const clubsTens = {
+    color: "black",
+    suit: "clubs",
+    value: 10,
+};
+
+for (const clubsTen of document.querySelectorAll('#clubs-ten')){
+    clubsTen.object = clubsTens;
+}
+
 
 //STOCK PILE CARD DIRECTION
 //========================================================
@@ -362,9 +406,9 @@ function wastePileCardDirection() {
 
     for (const card of cardsInWaste) {
             card.classList.remove('back');
-            card.innerHTML = `
-                    <div> ${getCardValue(card.object.value)} </div>
-                    <div> ${getSuitSymbol(card.object.suit)} </div>
+            card.textContent = `
+                    ${getCardValue(card.object.value)}
+                    ${getSuitSymbol(card.object.suit)}
             `;
     }
 }
@@ -675,7 +719,7 @@ const stockCards = document.querySelectorAll('.stock-card');
                     movableCard !== pile.lastElementChild // Blocks a move if an ace is already in an empty foundation
                 ) {
                     aceToEmptyFoundationMoveFound = true
-                    console.log("Tableu ace to empty column move found:", movableCard, pile)
+                    console.log("Tableu ace to empty foundation pile move found:", movableCard, pile)
                 }
             }
             
@@ -686,7 +730,7 @@ const stockCards = document.querySelectorAll('.stock-card');
                 )
                     {
                     aceToEmptyFoundationMoveFound = true
-                    console.log("Waste pile ace to empty column move found:", movableCard, pile)
+                    console.log("Waste pile ace to empty foundation pile found:", movableCard, pile)
                 }
             }
 
@@ -696,7 +740,7 @@ const stockCards = document.querySelectorAll('.stock-card');
                 )
                     {
                     aceToEmptyFoundationMoveFound = true
-                    console.log("Stock pile ace to empty column move found:", movableCard, pile)
+                    console.log("Stock pile ace to empty foundation pile found:", movableCard, pile)
                 }
             }
         } 
@@ -725,6 +769,58 @@ const stockCards = document.querySelectorAll('.stock-card');
 
     return movesAvailable;
 }
+
+checkForMoves();
+
+// AUTO-COMPLETE
+//========================================================
+
+function autoComplete(){
+    
+    const tableuCards = document.querySelectorAll(".tableu-card");
+    const buttons = document.querySelector("#buttons");
+
+    for (const card of tableuCards) {
+        if (card.classList.contains('back')) {
+            return;
+        }
+    }
+    let autoCompleteButton = document.createElement("button");
+    autoCompleteButton.setAttribute("id","auto-complete");
+    buttons.appendChild(autoCompleteButton);
+    autoCompleteButton.textContent = "Auto-complete";
+    autoCompleteButton.addEventListener("click", function() {
+    localStorage.setItem("solitaireScore", totalSeconds);
+    document.getElementById("score").innerText = formatTime(totalSeconds);
+
+    // A lower time means a faster game.
+    if (bestTime === null || totalSeconds < Number(bestTime)) {
+        localStorage.setItem("solitaireBestTime", totalSeconds);
+    }
+
+    window.location.reload();
+    });
+
+}
+
+// INSTRUCTIONS
+//========================================================
+
+
+// Get elements by ID
+const modal = document.getElementById('instructions-modal');
+const openBtn = document.getElementById('hint');
+const closeBtn = document.getElementById('close-instructions');
+
+// Click Instructions button to show popup
+openBtn.onclick = function() {
+  modal.classList.remove('hidden');
+};
+
+// Click Close button to hide popup
+closeBtn.onclick = function() {
+  modal.classList.add('hidden');
+};
 
 //TIMER
 //========================================================
@@ -779,10 +875,21 @@ if (savedScore !== null) {
     document.getElementById("score").innerText = "00:00";
 }
 
+// Show the fastest saved time when the game opens.
+let bestTime = localStorage.getItem("solitaireBestTime");
+if (bestTime !== null) {
+    document.getElementById("best-time").innerText = formatTime(Number(bestTime));
+}
+
 // Save this game's time, then start the next game from zero.
 document.getElementById("restart").addEventListener("click", function() {
     localStorage.setItem("solitaireScore", totalSeconds);
     document.getElementById("score").innerText = formatTime(totalSeconds);
+
+    // A lower time means a faster game.
+    if (bestTime === null || totalSeconds < Number(bestTime)) {
+        localStorage.setItem("solitaireBestTime", totalSeconds);
+    }
 
     //proposal: easiet way to start a new game is by reloading the page. The game is time is picked up from storage
     window.location.reload();
