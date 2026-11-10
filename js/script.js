@@ -405,7 +405,7 @@ stockPile.addEventListener("click", function (e) {
   }
 });
 
-//CHANGE CURSOR WHEN BOTH STOCK AND WASTE PILES ARE EMPTY
+//CHANGE CURSOR WHEN BOTH STOCK AND WASTE PILES ARE EMPTY AND HIDE REFRESH ICON
 //========================================================
 
 stockPile.addEventListener("mouseover", function (e) {

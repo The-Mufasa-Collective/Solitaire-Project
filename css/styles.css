@@ -66,7 +66,7 @@ body {
   linear-gradient(180deg, rgb(58, 16, 20) 0%, rgb(97, 25, 31) 90%, rgba(58, 16, 20) 100%);
     padding: 0.5rem 1.5rem;
     width: 100%;
-    color: #f3aa23;
+    color: #f7c364;
     text-shadow: 2px 2px 4px rgb(3, 12, 7, 0.5);
     /*border-bottom: solid 0.2rem;
     border-image: linear-gradient(88deg, #91610d 0%, #f3aa23 50%, #896417 100%) 1;
@@ -154,8 +154,10 @@ h1 {
 
 #stock {
   cursor: pointer;
-  background-image: url("../assets/refresh-icon.svg");
-  background-size: 100px;
+  background-image: url("/assets/refresh-icon.png"),
+  url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.94%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23n)%22%20opacity%3D%220.15%22%2F%3E%3C%2Fsvg%3E"),
+ linear-gradient(180deg, #1c4231 0%, #06140c 100%);
+  background-size: 4rem, auto, auto;
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -204,8 +206,9 @@ h1 {
   height: var(--card-height);
   box-sizing: border-box;
   padding: 6px 8px;
-  background: white;
-  background-image: url("/assets/card-base.png");
+  background: black;
+  background-image: url("/assets/card-black.png"); 
+  background-repeat: repeat;
   background-position: center;
   background-size: calc(var(--card-width) - 8px) calc(var(--card-height) - 8px);
   color: black;
@@ -216,12 +219,91 @@ h1 {
   text-align: left;
 }
 
-.card.red { color: crimson; }
+.card.red { 
+  color: crimson;
+  background-image: url("/assets/card-red.png"); 
+}
+
+
+/* CARDS */
+
+/* Clubs */ 
+
+#card-clubs-1 { 
+  background-image: url("/assets/clubs-ace.png"); 
+}
+
+#card-clubs-11 { 
+  background-image: url("/assets/clubs-jack.png"); 
+}
+
+#card-clubs-12 { 
+  background-image: url("/assets/clubs-queen.png"); 
+}
+
+#card-clubs-13 { 
+  background-image: url("/assets/clubs-king.png"); 
+}
+
+/* Spades */
+
+#card-spades-1 { 
+  background-image: url("/assets/spades-ace.png"); 
+}
+
+#card-spades-11 { 
+  background-image: url("/assets/spades-jack.png"); 
+}
+
+#card-spades-12 { 
+  background-image: url("/assets/spades-queen.png"); 
+}
+
+#card-spades-13 { 
+  background-image: url("/assets/spades-king.png"); 
+}
+
+/* Diamonds */
+
+#card-diamonds-1 { 
+  background-image: url("/assets/diamonds-ace.png"); 
+}
+
+#card-diamonds-11 { 
+  background-image: url("/assets/diamonds-jack.png"); 
+}
+
+#card-diamonds-12 { 
+  background-image: url("/assets/diamonds-queen.png"); 
+}
+
+#card-diamonds-13 { 
+  background-image: url("/assets/diamonds-king.png"); 
+}
+
+/* Hearts */
+
+#card-hearts-1 { 
+  background-image: url("/assets/hearts-ace.png"); 
+}
+
+#card-hearts-11 { 
+  background-image: url("/assets/hearts-jack.png"); 
+}
+
+#card-hearts-12 { 
+  background-image: url("/assets/hearts-queen.png"); 
+}
+
+#card-hearts-13 { 
+  background-image: url("/assets/hearts-king.png"); 
+}
+
 
 /* Face-down card */
 .card.back {
   background-color: crimson;
-  background-image: url("/assets/card-back.png"); 
+  background-image: url("/assets/card-back.png") !important; 
   box-shadow: 0px 0px 0px 4px #962a26 inset;
 }
 
