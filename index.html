@@ -10,15 +10,28 @@
 <body>
 
   <div id="top-bar">
+
+      <h1>Solitaire</h1>
+
       <div class="info">Time <span id="timer">00:00</span></div>
-      <div class="info recent-score">
-        <div>Most Recent Game's Time</div>
+      
+      <ul id="score-container">
+        
+        <li>
+        <div class="info recent-score">
+        <div>Last Game's Time</div>
         <span id="score">00:00</span>
-      </div>
-      <div class="info recent-score">
+        </div>
+        </li>
+
+        <li>
+        <div class="info recent-score">
         <div>Best Time</div>
         <span id="best-time">--:--</span>
-      </div>
+        </div>
+        </li>
+      
+      </ul>
     </div>
 
   <div id="game">
@@ -74,7 +87,7 @@
 <!-- Instructions Pop-up Panel -->
     <div id="instructions-modal" class="modal hidden">
       <div class="instructions">
-        <h1 class="modal-title">How to play solitaire</h1>
+        <h2 class="modal-title">How to play solitaire</h2>
         <ol id="content-list">
           <li>Click on a card to select it.</li>
           <li>Click on a pile to move the selected card there.</li>
@@ -89,7 +102,7 @@
 <!--- Victory Pop-up --->
   <div id="victory-modal" class="end-game-modal modal hidden">
     <div class="instructions">
-      <h1 class="modal-title">🎉 Victory!</h1>
+      <h2 class="modal-title">🎉 Victory!</h2>
       <p style="color: white; font-size: 20px;">Congratulations! You completed the game.</p>
       <button id="play-again-victory" class="play-again">Play Again</button>
     </div>
@@ -100,7 +113,7 @@
 <!--- No More Moves Pop-up --->
   <div id="no-moves-modal" class="end-game-modal modal hidden">
     <div class="instructions">
-      <h1 class="modal-title">Game Over</h1>
+      <h2 class="modal-title">Game Over</h2>
       <p style="color: white; font-size: 20px;">Too bad! There are no more available moves.</p>
       <button id="play-again-gameover" class="play-again">Play Again</button>
     </div>
