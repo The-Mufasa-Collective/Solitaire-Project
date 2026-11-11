@@ -239,6 +239,9 @@ button:hover { background: #d4d4d4; }
 #content-list {
   font-size: 18px;
   color: white;
+  list-style-position: inside;
+  margin-bottom: 16px;
+  line-height: 1.5;
 }
 
 /* Close button */
