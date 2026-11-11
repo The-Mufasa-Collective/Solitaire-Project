@@ -94,29 +94,25 @@
           <li>Try to build sequences from Ace to King in each foundation.</li>
         </ol>
         <!-- Button to close the pop-up panel -->
-        <button id="close-instructions">Close</button>
+        <button id="close-instructions" class="play-again">Close</button>
       </div>
     </div>
 
 <!--------------------------------------------------->
 <!--- Victory Pop-up --->
   <div id="victory-modal" class="end-game-modal modal hidden">
-    <div class="instructions">
-      <h2 class="modal-title">🎉 Victory!</h2>
-      <p style="color: white; font-size: 20px;">Congratulations! You completed the game.</p>
+    <h2 class="modal-title" id="victory-text">Victory!</h2>
+      <p>Congratulations! You completed the game.</p>
       <button id="play-again-victory" class="play-again">Play Again</button>
-    </div>
   </div>
 <!--------------------------------------------------->
 
 <!--------------------------------------------------->
 <!--- No More Moves Pop-up --->
   <div id="no-moves-modal" class="end-game-modal modal hidden">
-    <div class="instructions">
-      <h2 class="modal-title">Game Over</h2>
-      <p style="color: white; font-size: 20px;">Too bad! There are no more available moves.</p>
+      <h2 class="modal-title" id="gameover-text">Game Over!</h2>
+      <p>Too bad! There are no more available moves.</p>
       <button id="play-again-gameover" class="play-again">Play Again</button>
-    </div>
   </div>
 <!--------------------------------------------------->
 
