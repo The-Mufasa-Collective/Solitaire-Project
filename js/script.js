@@ -175,14 +175,6 @@ function goesOnFoundation(card, foundation) {
   }
 }
 
-//for test only, anette has done this part so delete after testing
-//  const allCards = document.querySelectorAll(".tableu-card");
-// for (const card of allCards) {
-//     card.addEventListener("dragstart", function() {
-//         selected = card;
-//     });
-// }
-
 // does for each of the 4 foundation boxes
 for (const foundation of foundationPile) {
   //runs when a card is held over this box.
