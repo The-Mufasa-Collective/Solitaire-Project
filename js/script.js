@@ -781,7 +781,7 @@ function autoComplete(){
         }
     }
     //added this to stop creating button if it already exists
-    if (document.querySelector("#Auto-complete")){
+    if (document.querySelector("#auto-complete")){
       return;
 
     }
