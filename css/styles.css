@@ -470,6 +470,7 @@ h1 {
   position: absolute;
   left: 0;
   margin-top: 1.5rem;
+  filter: drop-shadow(0 0 0 rgb(26, 27, 27, 0.5));
 }
 
 .card[draggable="true"] { cursor: grab; }
